@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ahlzen.SysexSharp.SysexLib;
+namespace Ahlzen.SysexSharp.SysexLib.Manufacturers;
 
-public static class Manufacturers
+public static class ManufacturerData
 {
     /// <summary>
     /// Returns the manufacturer ID bytes for the
