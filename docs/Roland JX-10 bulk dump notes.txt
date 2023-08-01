@@ -1,0 +1,50 @@
+Sysex bulk dump functionality of JX-10 is completely different from that of MKS-70. Here's the comparison, based on ROM versions 2.30 and 1.08 respectively (ie. latest 'known' official versions).
+
+According to the specs, JX-10 implements the following sysex commands:
+
+F0 41 40 <Unit #> 24 <File name> <Check sum> F7 : Want to send a file (WSF)
+
+F0 41 41 <Unit #> 24 <File name> <Check sum> F7 : Request a file (RQF)
+
+F0 41 42 <Unit #> 24 <Data 128 bytes> <Check sum> F7 : Data (DAT)
+
+F0 41 43 <Unit #> 24 F7 : Acknowledge (ACK)
+
+F0 41 45 <Unit #> 24 F7 : End of file (EOF)
+
+F0 41 4E <Unit #> 24 F7 : Communication error (ERR)
+
+F0 41 4F <Unit #> 24 F7 : Rejection (RJC)
+
+The essence of those commands is loading and dumping CONTENTS OF THE RAM CARTRIDGE ONLY without any structure. The dump routines do not care whether it's patch/tone or sequencer data. The physical CARTRIDGE MEMORY ADDRESS IS HARD-CODED all over the place and there's no way it could be forced to look at internal memory instead. Cumbersome handshake communication is required to transfer data in 128 byte (256 nybble) chunks so a dedicated program (eg. CPJXWIN) has to be used for that purpose. Yes, it can be done in MidiQuest but it takes some clever scripting.
+ 
+
+
+According to the specs, MKS-70 implements the following sysex commands:
+
+F0 41 34 <Unit #> 24 <Level #> 01 00 <Patch number> 00 F7 : Program Number (PGR)
+F0 41 34 <Unit #> 24 <Level #> <Group #> 00 <Tone number> 00 F7 : Program Number (PGR)
+
+F0 41 35 <Unit #> 24 <Level #> 01 <Data 51 bytes> F7 : All Patch Parameters (APR)
+F0 41 35 <Unit #> 24 <Level #> <Group #> <Data 59 bytes> F7 : All Tone Parameters (APR)
+
+F0 41 36 <Unit #> 24 <Level #> 01 <Parameter #> <Value> F7 : Individual Patch Parameter (IPR)
+F0 41 36 <Unit #> 24 <Level #> <Group #> <Parameter #> <Value> F7 : Individual Tone Parameter (IPR)
+
+F0 41 37 <Unit #> 24 <Level #> 01 00 <Patch number> <Data 96 bytes> F7 : Bulk Dump (BLD)
+F0 41 37 <Unit #> 24 <Level #> 01 00 <Tone number> <Data 59 bytes> F7 : Bulk Dump (BLD)
+
+* Level # = 20 (Tone), 30 (Patch)
+** Group # = 01 (Tone A), 02 (Tone B)
+*** Patch/Tone parameter block structure(s) can be found in either Owner's Manual or Service Notes for both JX-10 and MKS-70.
+
+These commands are concerned with sending/receiving individual parameters, whole tones/patches and finally dumping/loading all the tones/patches IN INTERNAL MEMORY ONLY. This is clearly stated in the specs, and this time the INTERNAL MEMORY ADDRESS IS HARD-CODED. There's no way to bulk load/dump parameters, tones or patches in the RAM cartridge with these commands. No handshake is needed anymore.
+ 
+
+The weird part is that the JX-10 dump routines (ie. 40..4F) are there as well and look as if they should work (ie. dump/load cartridge data), although they are nowhere mentioned in the MIDI specs! I don't have a MKS-70 to check this out, and I have no idea whether those can be invoked from the front panel (but I sure would like to know!). Another weird thing: there are some 'spores' of code for patch/tone level transfer and even parameter editing found in JX-10 firmware, only this part of the code does not get executed! Colin Fraser notes "When I found the code for SysEx reception there was only a slight hint that they had planned to implement editing via midi" on his site, I guess this is it.
+
+More weirdness: In PGR message format the spec says: 00 <Patch/Tone number> 00. Actually what's transmitted is <Patch/Tone number> 00 only - the leading 00 is not there. Worse, what's expected when receiving this message is 00 <Patch/Tone number> - now the trailing 00 is not wanted! Probably the spec was so confusing (why those zeros?) that a Roland coder went totally nuts over it and produced three contradicting versions. Quoting Colin Fraser again: "The Roland software engineers must have either been under real pressure to get the job finished, or they simply got the office cleaner to write it, because it is a poorly structured, badly written mess."
+
+Probably the weirdest inconsistency that has crept in is that while Tone Bulk Dump works with full bytes (0..127) Patch Bulk Dump uses nybbles (0..15) so the 96 bytes in bulk dump format actually represent 48 bytes in 96 nybbles. Now, there are 53 bytes in a Patch parameter block so some sort of encoding was used... grrr!
+
+BTW, in an old email Colin Fraser explains why the sysex dump on JX only works with cartridge data: "The rather daft reason you can't do a sysex dump from the JX without a cartridge is a side-effect of the sequencer. The JX's sequencer has to use cartridge memory to store data as there's no spare memory inside the JX. The only sysex dump routine purely does a dump of the contents of the cartridge. It doesn't make a distinction between sequencer data and patch data. Roland didn't bother with a separate routine to sysex dump the internal patches. The end result is that the JX can only dump patches stored in the cart, and the dump format is completely incompatible with the MKS70."

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" href="Roland%20D-50%20Sysex%20Tutorial_files/cyan.css">
+<link href="Roland%20D-50%20Sysex%20Tutorial_files/cyan-lightbox.css" rel="stylesheet">
+<link rel="icon" type="image/ico" href="http://www.cyan-music.com/favicon.ico">
+<link rel="shortcut icon" href="http://www.cyan-music.com/favicon.ico">
+<link rel="alternate" type="application/rss+xml" title="CYAN MUSIC - RSS Feed" href="http://www.cyan-music.com/rss.xml">
+
+<title>CYAN ⟩ TUTORIALS ⟩ ROLAND D-50 SYSEX HANDLING</title>
+
+<meta name="keywords" content="cyan,roland,d50,sysex">
+<meta name="description" content="CYAN ⟩ Tutorial Section ⟩ Roland D-50 SysEx handling">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="category" content="music">
+<meta name="page-topic" content="music">
+<meta name="robots" content="index, follow">
+<meta name="revisit-after" content="7 days">
+<meta name="location" content="Wuppertal, Germany">
+<meta name="copyright" content="CYAN">
+<meta name="publisher" content="cyan-music.com">
+<meta name="author" content="Marco Rockstroh">
+<meta name="generator" content="Adobe Dreamweaver CS6">
+<meta name="language" content="EN">
+
+</head>
+<body>
+
+<script src="Roland%20D-50%20Sysex%20Tutorial_files/jquery-1.js"></script>
+<script src="Roland%20D-50%20Sysex%20Tutorial_files/lightbox.js"></script>
+
+<div id="site">
+
+<div id="nav-top"><div class="logo"><a href="http://www.cyan-music.com/index.html" id="logo" target="_self"></a></div></div><div id="nav-bot"><div id="nav-menu"><a href="http://www.cyan-music.com/releases.html" class="nav" target="_self">Releases</a><br><a href="http://www.cyan-music.com/artists.html" class="nav" target="_self">Artists</a><br><a href="http://www.cyan-music.com/genres.html" class="nav" target="_self">Genres</a><br><a href="http://www.cyan-music.com/mixes.html" class="nav" target="_self">Mixes</a><br><a href="http://www.cyan-music.com/videos.html" class="nav" target="_self">Videos</a><br><a href="http://www.cyan-music.com/studio.html" class="nav" target="_self">Studio</a><br><a href="http://www.cyan-music.com/sounddesign.html" class="nav" target="_self">Sounddesign</a><br><a href="http://www.cyan-music.com/tutorials.html" class="nav" id="select" target="_self">Tutorials</a><br><a href="http://www.cyan-music.com/about.html" class="nav" target="_self">About</a><br><a href="http://www.cyan-music.com/privacy.html" class="nav" target="_self">Privacy</a><br><a href="http://www.cyan-music.com/contact.html" class="nav" target="_self">Contact</a></div></div><div id="soc-content"><div class="soc1"><a href="http://soundcloud.com/cyan-music" target="_blank" id="social1"></a></div><div class="soc2"><a href="https://cyannetlabel.bandcamp.com/" target="_blank" id="social2"></a></div><div class="soc3"><a href="https://www.youtube.com/user/CYANMUSICNETLABEL" target="_blank" id="social3"></a></div><div class="soc4"><a href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" id="social4"></a></div><div class="soc5"><a href="http://www.cyan-music.com/rss.xml" target="_blank" id="social5"></a></div></div>
+    
+<div class="main-content"><div class="sidebar-1"><div class="sidebar-menu"><div class="expand"><i class="fa fa-angle-right"></i></div></div><div class="sub-menu"><a href="http://www.cyan-music.com/releases.html" class="nav" target="_self">Releases</a><br><a href="http://www.cyan-music.com/artists.html" class="nav" target="_self">Artists</a><br><a href="http://www.cyan-music.com/genres.html" class="nav" target="_self">Genres</a><br><a href="http://www.cyan-music.com/mixstreams.html" class="nav" target="_self">Mixes</a><br><a href="http://www.cyan-music.com/videos.html" class="nav" target="_self">Videos</a><br><a href="http://www.cyan-music.com/studio-cyan.html" class="nav" target="_self">Studio</a><br><a href="http://www.cyan-music.com/sounddesign.html" class="nav" target="_self">Sounddesign</a><br><a href="http://www.cyan-music.com/tutorials.html" class="nav" target="_self" id="selectres">Tutorials</a><br><a href="http://www.cyan-music.com/about.html" class="nav" target="_self">About</a><br><a href="http://www.cyan-music.com/privacy.html" class="nav" target="_self">Privacy</a><br><a href="http://www.cyan-music.com/contactform.html" class="nav" target="_self">Contact</a><br><br><a href="https://soundcloud.com/cyan-music" class="fone" target="_blank">Soundcloud</a>&nbsp;<a href="https://cyannetlabel.bandcamp.com/" class="fone" target="_blank">Bandcamp</a>&nbsp;<a href="https://www.youtube.com/user/CYANMUSICNETLABEL" class="fone" target="_blank">Youtube</a>&nbsp;<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="fone" target="_blank">CC</a>&nbsp;<a href="http://www.cyan-music.com/rss.xml" class="fone" target="_blank">RSS</a></div></div></div>
+
+<div id="conhead"></div>
+
+<div class="conarea h2">Tutorials ⟩ Roland D-50 SysEx handling<div class="coninit"></div>
+
+<div class="rel6 h6"><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-00.png"><br>SysEx
+ (in short term for "system exclusive messages") is a protocol to 
+transfer system exclusive data between 2 devices to backup or restore 
+data, for example patches, presets and user settings of a device.<br><br>In
+ this tutorial, you will learn how to handle SysEx on the Roland D-50. 
+Backup your data using Sysex always make sense, but besides the backup 
+aspect, SysEx enables you to try and use various soundsets by just 
+loading them into your synthesizer. So, besides backup, you can discover
+ a wider palette of sounds.<br><br><strong>About MIDI</strong>:<br>If 
+you simply want to backup your D-50 data via MIDI, the D-50 must be 
+connected to a MIDI-Interface at least via "MIDI-Out". If you plan to 
+use MIDI also to load SysEx data into the D-50, you will have to connect
+ the D-50 via "MIDI-Out" (send data) and "MIDI-In" (receive data).<br><br><strong>About SysEx tools</strong>:<br>In
+ this tutorial, the free SysEx tool "SysEx Librarian" (Mac OSX) is used 
+to demonstrate the functionality. In general, all SysEx tools will work 
+the same way, including those running under Windows or Linux. On the 
+internet, you will find several free SysEx data transfer tools.<br><br><span class="expansion">Step 1: Disable internal protection</span><br>If
+ you just want to backup your D-50 data, you can skip this step. If you 
+backup your data because you want to replace the current D-50 soundset 
+with another one, it is important to disable the internal write 
+protection. With write protection activated, you wont be able to load 
+new soundsets into the D-50.<br><br>Press the button "<strong>Tune/Function</strong>" to access the system function settings.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-01.png" alt="Tutorials - Roland D-50 SysEx handling"><br>In the display, you will see "<strong>Protect</strong>" switched on by default.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-02.png"><br>Select the function "Protect" by pressing the button "<strong>Tone Balance</strong>".<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-03.png"><br>The value "<strong>On</strong>" now will blink, use the vector joystick of the D-50 to switch the value to "<strong>Off</strong>" (use the joystick on the left/right axis).<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-04.png"><br>Once again, press the button "<strong>Tune/Function</strong>"
+ to confirm your new settings. Now that the write protection is switched
+ off, you can start the backup of data and load new soundsets.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-05.png"><br><span class="expansion">Step 2: Save SysEx data (Bulk Dump)</span><br>The data transfer menu of the D-50 offers several options to handle SysEx data transfer.<br><strong>Bulk Dump</strong> is used to send SysEs data from the D-50 to another device.<br><strong>Bulk Load</strong> lets you load any compatible SysEx data into the D-50.<br><strong>INT&gt;CRD</strong> saves SysEx data to a compatible data storage card (like Roland M256-E or M512-E).<br><strong>CRD&gt;INT</strong> loads data from a data storage card or extension card.<br><br>To save SysEx data via MIDI, you will have to chose the option "<strong>Bulk Dump</strong>" from the data transfer menu.<br>To enter the data transfer menu and to select the bulk dump option, keep the button "<strong>Data Transfer</strong>" pressed and press the button "<strong>Key Mode</strong>" in addition.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-06.png"><br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-07.png"><br>The D-50 menu asks you, if you are sure to start the SysEx data dump.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-10.png"><br>Start your SysEx client and select the corrosponding device from the list of your available devices.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-08.png"><br><br>Chose "<strong>Record One</strong>" to record a single patch or "<strong>Record Many</strong>"
+ to record the whole D-50 bank via SysEx. Other SysEx tools will offer 
+the same options, maybe titled alternative. Before loading a new 
+soundset into the D-50, it makes sense to backup the complete D-50 bank,
+ so "<strong>Record Many</strong>" will be the option to be chosen.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-09.png"><br><br>You can select "<strong>Enter</strong>" to start the data transfer, or "<strong>Exit</strong>" to cancel the data transfer.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-11.png">After you confirmed the recording with "<strong>Enter</strong>", your SysEx client will start to record incoming SysEx data.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-12.png"><br><br>When the D-50 has sent the complete data, you will notice the message "<strong>Complete</strong>" on the display. You can leave the menu now by pressing the "<strong>Exit</strong>" button once again.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-13.png">If
+ you followed the steps of this tutorial precisely, you will see the 
+recorded SysEx data file in the list of your SysEx client. In the 
+tutorials case, the recorded file has been named "Untitled-3" 
+automatically, depending on your OS or SysEx client, your recording will
+ be titled different. Also depending on the preferences of your SysEx 
+client, the recorded file has been saved to your HD into a specific 
+folder. It makes sense, to navigate to this folder and to rename the 
+recorded SysEx file, also adding the date of recording makes sense to 
+keep overview.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-14.png"><br><br><span class="expansion">Step 3: Load SysEx data (Bulk Load)</span><br>Loading
+ a new soundset into the D-50 is very similar to the bulk dump 
+procedure. Keep in mind, that the current D-50 soundset will be replaced
+ by the new soundset you load.<br><br>First, open your SysEx client and 
+load the soundset you want to transmit to the D-50. Make sure you will 
+transmit the SysEx data file to the correct MIDI-port and device.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-15.png"><br><br>On the D-50, navigate to the data transfer menu again and select the "<strong>Bulk Load</strong>" option as following:<br>Keep the button "<strong>Data Transfer</strong>" pressed and in addition, press the button "<strong>Split Point</strong>".
+ Notice, that you cant load any SysEx data to the D-50 when write 
+protection is activated. If you want to disable the write protection, 
+please read Step 1 of this tutorial.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-16.png"><br><img src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-17.png"><br><br>The data transfer menu will ask you if you are sure to transmit new data to the D-50.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-18.png"><br>You can select "<strong>Enter</strong>" to start the data transfer, or "<strong>Exit</strong>" to cancel the data transfer.<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-11.png">When selected "<strong>Enter</strong>",
+ the D-50 will wait for data input by the SysEx client. Start the data 
+transfer in your SysEx client, mostly you will have to use a function or
+ button called "<strong>Send</strong>" or "<strong>Transmit</strong>".<br><img class="tutbanner01" src="Roland%20D-50%20Sysex%20Tutorial_files/tutorials-roland-d50-sysex-handling-19.png">When the data transfer has been completed and was successful, the D-50 will show up the message "<strong>Complete</strong>". Press the "<strong>Exit</strong>" button on the D-50 to leave the data transfer menu again and to browse through the new soundset.<br><br><strong>Additional infos about using data storage cards</strong>:<br>Saving
+ SysEx data to an external data card or loading data from an external 
+data card works the same way as when used the MIDI protocol. Like 
+described in the steps before, you will have to navigate to the "Data 
+Transfer" menu of the D-50, but selecting <strong>INT&gt;CRD</strong> (to save data) or <strong>CRD&gt;INT</strong>
+ (to load data). If you want to save data to an external data card, make
+ sure that write protection of the card has been disabled before.</div></div>
+    
+<script src="Roland%20D-50%20Sysex%20Tutorial_files/jquery.js"></script>
+<script src="Roland%20D-50%20Sysex%20Tutorial_files/index.js"></script>
+
+<div class="confoot h3">CYAN ⟩ Free audio label ⟩ Founded 2009</div>
+    
+<div id="datanote" style="display: none;"><a onclick="var d = new Date(); d = new Date(d.getTime() +1000*60*60*24*730); document.cookie = 'datanote=1; expires='+ d.toGMTString() + ';'; document.getElementById('datanote').style.display = 'none';" class="button bold">OK</a><p class="cookiemessage"><strong>Privacy</strong>: This website uses Cookies and external web services, such as Googlefonts and others. By continuing to use this website,<br>you are giving consent to the use of cookies and external web services. Visit our privacy site for <a class="data" href="http://www.cyan-music.com/privacy.html" target="_self">more informations</a><br><strong>Datenschutz</strong>:
+ Diese Webseite verwendet Cookies und externe Webdienste, wie z.B. 
+Googlefonts und weitere. Durch weitere Nutzung dieser Webseite<br>stimmst Du der Verwendung von Cookies und externer Webdienste zu. Besuche unsere Datenschutzseite für <a class="data" href="http://www.cyan-music.com/datenschutz.html" target="_self">mehr Informationen</a></p></div><script>a = document.cookie;while(a != ''){while(a.substr(0,1) == ' '){a = a.substr(1,a.length);}cn = a.substring(0,a.indexOf('='));if(a.indexOf(';') != -1){cw = a.substring(a.indexOf('=')+1,a.indexOf(';'));}else{cw = a.substr(a.indexOf('=')+1,a.length);}if(cn == 'datanote'){r = cw;}i = a.indexOf(';')+1;if(i == 0){i = a.length}a = a.substring(i,a.length);}if(r == '1') document.getElementById('datanote').style.display = 'none';</script>
+
+</div>
+
+
+<div id="lightboxOverlay" class="lightboxOverlay" style="display: none;"></div><div id="lightbox" class="lightbox" style="display: none;"><div class="lb-outerContainer"><div class="lb-container"><img class="lb-image" src=""><div class="lb-nav"><a class="lb-prev" href=""></a><a class="lb-next" href=""></a></div><div class="lb-loader"><a class="lb-cancel"></a></div></div></div><div class="lb-dataContainer"><div class="lb-data"><div class="lb-details"><span class="lb-caption"></span><span class="lb-number"></span></div><div class="lb-closeContainer"><a class="lb-close"></a></div></div></div></div></body></html>
