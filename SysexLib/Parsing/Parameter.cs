@@ -19,6 +19,10 @@ public class ValidationException<T> : Exception
     }
 }
 
+/// <summary>
+/// Base class for known sysex parameters.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public abstract class Parameter<T>
 {
     /// <summary>
