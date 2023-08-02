@@ -9,21 +9,24 @@ namespace Ahlzen.SysexSharp.SysexLib.Parsing;
 /// valid and, if possible, a corrected value that is within the
 /// valid range for this parameter.
 /// </summary>
-public class ValidationException<T> : Exception
+public class ValidationException : Exception
 {
-    public T CorrectedValue { get; }
-    public ValidationException(string message, T correctedValue) :
+    public object CorrectedValue { get; }
+    public ValidationException(string message, object correctedValue) :
         base(message)
     {
         CorrectedValue = correctedValue;
     }
 }
 
+public interface IParameter
+{}
+
 /// <summary>
 /// Base class for known sysex parameters.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class Parameter<T>
+public abstract class Parameter<T> : IParameter
 {
     /// <summary>
     /// Validates that the specified value is valid
@@ -79,12 +82,12 @@ public class AsciiParameter : Parameter<string>
     public override void Validate(string value)
     {
         if (value == null)
-            throw new ValidationException<string>("Value is null.", "");
+            throw new ValidationException("Value is null.", "");
         if (value.Length > this.Length)
-            throw new ValidationException<string>(
+            throw new ValidationException(
                 "String is too long.", value.Substring(0,Length));
         if (ParsingUtils.HasNonPrintableCharacters(value))
-            throw new ValidationException<string>(
+            throw new ValidationException(
                 "String contains non-printable characters.",
                 ParsingUtils.ReplaceNonPrintableCharacters(value));
     }
@@ -152,10 +155,10 @@ public class NumericParameter : Parameter<int>
     public override void Validate(int value)
     {
         if (value < MinValue)
-            throw new ValidationException<int>(
+            throw new ValidationException(
                 "Value is too small.", MinValue);
         if (value > MaxValue)
-            throw new ValidationException<int>(
+            throw new ValidationException(
                 "Value is too large.", MaxValue);
     }
 

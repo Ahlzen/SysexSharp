@@ -35,4 +35,26 @@ public static class ParsingUtils
 
     private static bool IsNonPrintable(char c)
         => (c < 0x20 || c > 126);
+
+
+
+    // Static pattern matching functions
+
+    /// <summary>
+    /// Checks if the data matches (starts with) a specifications
+    /// sequence of bytes (pattern).
+    /// </summary>
+    /// <param name="data">Actual values from sysex. </param>
+    /// <param name="pattern"> Expected values. Null in pattern is wildcard
+    /// (matches any byte in data).</param>
+    /// <returns>True if data starts with the specified pattern.</returns>
+    public static bool MatchesPattern(byte[] data, byte?[] pattern)
+    {
+        if (data.Length < pattern.Length) return false;
+        for (int i = 0; i < pattern.Length; i++) {
+            if (pattern[i] == null) continue; // null matches any value
+            if (data[i] != pattern[i]) return false;
+        }
+        return true;
+    }
 }

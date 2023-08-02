@@ -97,4 +97,39 @@ public class Sysex
             }
         }
     }
+
+    /// <summary>
+    /// Tests the specified data for being a valid sysex.
+    /// Known sysex types implemente more specific tests to verify
+    /// that the data is of the specified type.
+    /// </summary>
+    /// <returns>True if the data appears to contain a valid sysex.</returns>
+    public static bool Test(byte[] data)
+    {
+        try {
+            Sysex.SanityCheck(data);
+        }
+        catch (ArgumentException) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /// <summary>
+    /// Performs basic checks to ensure that the data is a (plausibly)
+    /// valid sysex.
+    /// </summary>
+    /// <exception cref="ArgumentException">Thrown if data is not valid.</exception>
+    protected static void SanityCheck(byte[] data)
+    {
+        if (data is null)
+            throw new ArgumentNullException(nameof(data), "Sysex has no data.");
+        if (data.Length <= 3)
+            throw new ArgumentException(nameof(data), "Not enough data for a valid sysex.");
+        if (data[0] != Constants.START_OF_SYSEX)
+            throw new ArgumentException(nameof(data), "Start-of-sysex marker not found in data.");
+        if (data[data.Length - 1] != Constants.END_OF_SYSEX)
+            throw new ArgumentException(nameof(data), "End-of-sysex marker not found in data.");
+    }
 }
