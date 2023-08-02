@@ -4,8 +4,8 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
 
 /// <summary>
-/// Sysex representing a change in a single DX7 parameter
-/// value. Maybe either a voice parameter or a global function.
+/// Single DX7 parameter change. May be either a voice
+/// parameter or a global function.
 /// </summary>
 public class DX7ParameterChange : Sysex
 {
@@ -17,10 +17,10 @@ public class DX7ParameterChange : Sysex
     /// Parameter change messages are always 7 bytes in length:
     /// [0xf0, 0x43, 0x10, data, data, data, 0xf7]
     /// </summary>
-    public const int DX7ParameterChangeLengthBytes = 7;
+    private const int ParameterChangeLengthBytes = 7;
 
     public DX7ParameterChange(byte[] data) :
-        base(data, null, DX7ParameterChangeLengthBytes)
+        base(data, null, ParameterChangeLengthBytes)
     {}
 
     public override string? Device => "DX7";
@@ -43,7 +43,7 @@ public class DX7ParameterChange : Sysex
     {
         if (!Sysex.Test(data)) return false;
         if (!ParsingUtils.MatchesPattern(data, ParameterChangeFormat)) return false;
-        if (data.Length != ParameterChangeFormat.Length) return false;
+        if (data.Length != ParameterChangeLengthBytes) return false;
         int group = GetGroup(data);
         if (!(group == 0 || group == 2)) return false;
         return true;
