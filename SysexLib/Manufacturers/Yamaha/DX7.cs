@@ -53,12 +53,60 @@ public class DX7ParameterChange : Sysex
 }
 
 
-public class DX7Voice //: Sysex
+/// <summary>
+/// Yamaha DX7 single-voice data dump.
+/// </summary>
+public class DX7Voice : Sysex
 {
-    // TODO
+    private static readonly byte?[] SingleVoiceDataHeader = {
+        0xf0, 0x43, 0x00, 0x00, 0x01, 0x1b };
+
+    private const int SingleVoiceDataSize = (6 + 155 + 2);
+
+    public DX7Voice(byte[] data, string? name = null)
+        : base(data, name, SingleVoiceDataSize)
+    {
+    }
+
+    public override string? Device => "DX7";
+
+    public override string? Type => "Single voice";
+
+    public new static bool Test(byte[] data)
+    {
+        if (!Sysex.Test(data)) return false;
+        if (!ParsingUtils.MatchesPattern(data, SingleVoiceDataHeader)) return false;
+        if (data.Length != SingleVoiceDataSize) return false;
+        return true;
+    }
 }
 
-public class DX7Bank //: Sysex
+
+/// <summary>
+/// Yamaha DX7 32-voice bank data dump.
+/// </summary>
+public class DX7Bank : Sysex
 {
-    // TODO
+    private static readonly byte?[] BankDataHeader = {
+        0xf0, 0x43, 0x00, 0x09, 0x20, 0x00 };
+
+    private const int PackedVoiceDataSize = 128;
+    private const int BankDataSize = 6 + PackedVoiceDataSize * 32 + 2;
+
+    public DX7Bank(byte[] data, string? name = null)
+        : base(data, name, BankDataSize)
+    {
+    }
+
+    public override string? Device => "DX7";
+
+    public override string? Type => "32-voice bank";
+
+    public new static bool Test(byte[] data)
+    {
+        if (!Sysex.Test(data)) return false;
+        if (!ParsingUtils.MatchesPattern(data, BankDataHeader)) return false;
+        if (data.Length != BankDataSize) return false;
+        return true;
+    }
 }
