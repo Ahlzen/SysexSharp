@@ -47,13 +47,14 @@ public static class ParsingUtils
     /// <param name="data">Actual values from sysex. </param>
     /// <param name="pattern"> Expected values. Null in pattern is wildcard
     /// (matches any byte in data).</param>
+    /// <param name="offset">Offset (in data) where the pattern is expected to start.</param>
     /// <returns>True if data starts with the specified pattern.</returns>
-    public static bool MatchesPattern(byte[] data, byte?[] pattern)
+    public static bool MatchesPattern(byte[] data, byte?[] pattern, int offset = 0)
     {
-        if (data.Length < pattern.Length) return false;
+        if (data.Length < pattern.Length + offset) return false;
         for (int i = 0; i < pattern.Length; i++) {
             if (pattern[i] == null) continue; // null matches any value
-            if (data[i] != pattern[i]) return false;
+            if (data[i+offset] != pattern[i]) return false;
         }
         return true;
     }

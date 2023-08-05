@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ahlzen.SysexSharp.SysexLib.Parsing;
+using System;
 using System.Collections.Generic;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Roland;
@@ -30,7 +31,7 @@ public sealed class RolandSysex : Sysex
         {0x4f, "Rejection"},
     };
 
-    private static readonly Dictionary<byte?[], string> RolandModelIds = new()
+    private static readonly Dictionary<byte?[], string> RolandDeviceIds = new()
     {
         // Single-byte IDs
         { new byte?[] { 0x14 }, "D-50" },
@@ -45,13 +46,13 @@ public sealed class RolandSysex : Sysex
 
     internal class LegacyRolandHeader
     {
-        public byte?[] Data { get; }
+        public byte?[] Pattern { get; }
         public int? Length { get; }
         public string? Device { get; }
         public string? Type { get; }
 
-        public LegacyRolandHeader(byte?[] data, int? length, string? device, string? type) {
-            Data = data;
+        public LegacyRolandHeader(byte?[] pattern, int? length, string? device, string? type) {
+            Pattern = pattern;
             Length = length;
             Device = device;
             Type = type;
@@ -85,6 +86,10 @@ public sealed class RolandSysex : Sysex
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x37, null, 0x24 }, 69,  "MKS-70", "Tone bulk dump"),
     };
 
+    public new string? Device { get; set; }
+    public new string? Type { get; set; }
+    public new bool IsKnownType { get; set; }
+
     public RolandSysex(byte[] data, string? name = null, int? expectedLength = null)
         : base(data, name, expectedLength)
     {
@@ -93,7 +98,34 @@ public sealed class RolandSysex : Sysex
         if (ManufacturerName != "Roland")
             throw new ArgumentException("Data does not contain a Roland sysex", nameof(data));
 
-        // 
+        // Special cases ("legacy" headers)
+        foreach (LegacyRolandHeader legacyHeader in LegacyRolandHeaders)
+        {
+            if (ParsingUtils.MatchesPattern(data, legacyHeader.Pattern))
+            {
+                if (legacyHeader.Length == null ||
+                    legacyHeader.Length == data.Length)
+                {
+                    Device = legacyHeader.Device;
+                    Type = legacyHeader.Type;
+                    IsKnownType = true;
+                    return;
+                }
+            }
+        }
+
+        // Standard Roland sysex format
+        if (ParsingUtils.MatchesPattern(data, RolandStandardHeader))
+        {
+            foreach (byte?[] pattern in RolandDeviceIds.Keys)
+            {
+                if (ParsingUtils.MatchesPattern(data, pattern, 2))
+                {
+                    Device = RolandDeviceIds[pattern];
+                    return;
+                }
+            }
+        }
     }
 
 
