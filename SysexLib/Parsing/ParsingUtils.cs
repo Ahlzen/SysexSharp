@@ -58,4 +58,20 @@ public static class ParsingUtils
         }
         return true;
     }
+
+    /// <summary>
+    /// Checks if the data matches (starts with) a specifications
+    /// sequence of bytes (pattern).
+    /// </summary>
+    /// <param name="data">Actual values from sysex. </param>
+    /// <param name="pattern"> Expected values.</param>
+    /// <param name="offset">Offset (in data) where the pattern is expected to start.</param>
+    /// <returns>True if data starts with the specified pattern.</returns>
+    public static bool MatchesPattern(byte[] data, byte[] pattern, int offset = 0)
+    {
+        if (data.Length < pattern.Length + offset) return false;
+        for (int i = 0; i < pattern.Length; i++)
+            if (data[i + offset] != pattern[i]) return false;
+        return true;
+    }
 }

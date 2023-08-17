@@ -43,10 +43,19 @@ public abstract class Parameter
     /// for this parameter (length, range, etc)
     /// </summary>
     /// <exception cref="ValidationException">
-    /// Thrown if the specified value is not within the allowable
-    /// range.
+    /// Thrown if the specified value is not within the allowable range.
     /// </exception>
     public abstract void Validate(object value);
+
+    /// <summary>
+    /// Validates that the current value is valid
+    /// for this parameter (length, range, etc)
+    /// </summary>
+    /// <exception cref="ValidationException">
+    /// Thrown if the specified value is not within the allowable range.
+    /// </exception>
+    public virtual void Validate(byte[] data)
+        => Validate(GetValue(data));
 
     /// <summary>
     /// Returns this parameter's current value in the
@@ -57,7 +66,8 @@ public abstract class Parameter
     /// if the specified data is invalid or too short.
     /// </exception>
     /// <param name="data">The full sysex data.</param>
-    public abstract object GetValue(byte[] data);
+    /// <param name="extraOffset">Optional. Additional bytes to add to parameter's offset.</param>
+    public abstract object GetValue(byte[] data, int extraOffset = 0);
 
     /// <summary>
     /// Updates this parameter's current value in the
@@ -68,7 +78,8 @@ public abstract class Parameter
     /// if the parameter extends beyond the length of the data.
     /// </exception>
     /// <param name="data">The full sysex data.</param>
-    public abstract void SetValue(byte[] data, object value);
+    /// /// <param name="extraOffset">Optional. Additional bytes to add to parameter's offset.</param>
+    public abstract void SetValue(byte[] data, object value, int extraOffset = 0);
 }
 
 /// <summary>
@@ -103,30 +114,34 @@ public class AsciiParameter : Parameter
                 ParsingUtils.ReplaceNonPrintableCharacters(s));
     }
 
-    public override object GetValue(byte[] data)
+    public override object GetValue(byte[] data, int extraOffset = 0)
     {
-        if (Offset + Length > data.Length)
+        int effectiveOffset = Offset + extraOffset;
+        if (effectiveOffset + Length > data.Length)
             throw new ArgumentException(
                 "String value extends beyond end of data.", nameof(data));
-        return Encoding.ASCII.GetString(data, Offset, Length).TrimEnd();
+        return Encoding.ASCII.GetString(data, effectiveOffset, Length).TrimEnd();
     }
-    public string GetString(byte[] data) => (GetValue(data) as string)!;
+    public string GetString(byte[] data, int extraOffset = 0)
+        => (GetValue(data, extraOffset) as string)!;
 
-    public override void SetValue(byte[] data, object value)
+    public override void SetValue(byte[] data, object value, int extraOffset = 0)
     {
+        int effectiveOffset = Offset + extraOffset;
         if (value != null && value is not string)
             throw new ArgumentException($"Value is not of the right type. Expected: string, was: {value.GetType()}.");
 
         var s = value as string;
-        if (Offset + s.Length > data.Length)
+        if (effectiveOffset + s.Length > data.Length)
             throw new ArgumentException(
                 "String value extends beyond end of data.", nameof(value));
         if (s.Length > this.Length)
             throw new ArgumentException("String is too long.");
-        Array.Fill<byte>(data, 0x20, Offset, Length); // space-pad
-        Encoding.ASCII.GetBytes(s, 0, s.Length, data, Offset);
+        Array.Fill<byte>(data, 0x20, effectiveOffset, Length); // space-pad
+        Encoding.ASCII.GetBytes(s, 0, s.Length, data, effectiveOffset);
     }
-    public void SetString(byte[] data, string value) => SetValue(data, value);
+    public void SetString(byte[] data, string value, int extraOffset = 0)
+        => SetValue(data, value, extraOffset);
 }
 
 /// <summary>
@@ -165,38 +180,52 @@ public class NumericParameter : Parameter
         BitOffset = bitOffset;
     }
 
-    public override void Validate(int value)
+    public override void Validate(object value)
     {
-        if (value < MinValue)
+        if (value == null)
+            throw new ValidationException("Value is null.", "");
+        if (value is not int)
+            throw new ArgumentException($"Value is not of the right type. Expected: int, was: {value.GetType()}.");
+
+        int i = (int)value;
+        if (i < MinValue)
             throw new ValidationException(
                 "Value is too small.", MinValue);
-        if (value > MaxValue)
+        if (i > MaxValue)
             throw new ValidationException(
                 "Value is too large.", MaxValue);
     }
 
-    public override int GetValue(byte[] data)
+    public override object GetValue(byte[] data, int extraOffset = 0)
     {
-        if (Offset >= data.Length)
+        int effectiveOffset = Offset + extraOffset;
+        if (effectiveOffset >= data.Length)
             throw new ArgumentException(
                 "Data is not long enough");
 
         int mask = (1 << BitCount) - 1;
-        int value = ((int)data[Offset] >> BitOffset) & mask;
+        int value = ((int)data[effectiveOffset] >> BitOffset) & mask;
         return value;
     }
 
-    public override void SetValue(byte[] data, int value)
+    public override void SetValue(byte[] data, object value, int extraOffset = 0)
     {
-        if (Offset >= data.Length)
+        if (value == null)
+            throw new ValidationException("Value is null.", "");
+        if (value is not int)
+            throw new ArgumentException($"Value is not of the right type. Expected: int, was: {value.GetType()}.");
+
+        int i = (int)value;
+        int effectiveOffset = Offset + extraOffset;
+        if (effectiveOffset >= data.Length)
             throw new ArgumentException(
                 "Data is not long enough");
 
         int srcMask = (1 << BitCount) - 1;
         int dstMask = 0xff - (srcMask << BitOffset);
-        value = (value << BitOffset) & srcMask;
-        data[Offset] &= (byte)dstMask; // clear parameter's bit in byte
-        data[Offset] |= (byte)value; // set parameter value
+        i = (i << BitOffset) & srcMask;
+        data[effectiveOffset] &= (byte)dstMask; // clear parameter's bit in byte
+        data[effectiveOffset] |= (byte)i; // set parameter value
     }
 }
 
