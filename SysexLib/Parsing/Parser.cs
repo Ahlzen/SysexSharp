@@ -7,12 +7,12 @@ namespace Ahlzen.SysexSharp.SysexLib.Parsing;
 /// </summary>
 internal class Parser
 {
-    public IList<IParameter> Parameters { get; }
+    //public IList<IParameter> Parameters { get; }
 
-    public Parser(IList<IParameter> parameters)
-    {
-        Parameters = parameters;
-    }
+    //public Parser(IList<IParameter> parameters)
+    //{
+    //    Parameters = parameters;
+    //}
 
     // TODO
 }
