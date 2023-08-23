@@ -10,9 +10,7 @@ public abstract class BaseFixture
 
     protected Sysex LoadFile(string filename)
     {
-        byte[] data = File.ReadAllBytes(DataPath + filename);
-        // TODO: Use SysexFactory
-        Sysex sysex = new Sysex(data, filename);
+        Sysex sysex = SysexFactory.Load(DataPath + filename);
         return sysex;
     }
 }

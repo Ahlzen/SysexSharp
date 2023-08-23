@@ -10,6 +10,8 @@ namespace Ahlzen.SysexSharp.SysexLib;
 /// This class can be used directly for generic Sysex data, or used
 /// as a base class with selected members overridden for known specific
 /// sysex types.
+/// 
+/// Use SysexFactory to parse and initialize Sysex objects from data or file.
 /// </remarks>
 public class Sysex
 {
@@ -73,7 +75,10 @@ public class Sysex
     /// <param name="name">Filename, bank name etc, or null if not known/applicable.</param>
     /// <param name="expectedLength">If non-null, constructor checks that the supplied
     /// data is this many bytes and throws an ArgumentException otherwise.</param>
-    public Sysex(byte[] data, string? name = null, int? expectedLength = null)
+    /// <remarks>
+    /// Use SysexFactory to parse and initialize Sysex objects from data or file.
+    /// </remarks>
+    internal Sysex(byte[] data, string? name = null, int? expectedLength = null)
     {
         Debug.Assert(data != null);
         Debug.Assert(data.Length >= 3);
@@ -121,7 +126,7 @@ public class Sysex
     /// valid sysex.
     /// </summary>
     /// <exception cref="ArgumentException">Thrown if data is not valid.</exception>
-    protected static void SanityCheck(byte[] data)
+    internal static void SanityCheck(byte[] data)
     {
         if (data is null)
             throw new ArgumentNullException(nameof(data), "Sysex has no data.");
