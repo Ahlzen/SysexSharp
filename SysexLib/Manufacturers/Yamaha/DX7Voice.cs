@@ -14,10 +14,18 @@ public class DX7Voice : Sysex, ICanParse
     internal static readonly byte[] SingleVoiceDataHeader = {
         0xf0, 0x43, 0x00, 0x00, 0x01, 0x1b };
 
-    internal const int SingleVoiceDataSize = (6 + 155 + 2);
+    internal const int SingleVoiceHeaderLength = 6;
+    internal const int SingleVoiceParameterDataLength = 155;
+    internal const int SingleVoiceDataSize =
+        SingleVoiceHeaderLength +
+        SingleVoiceParameterDataLength +
+        2; // checksum + end-of-sysex
+
 
     #region Parameters
 
+    // Offsets are relative to the start of the Parameter Data section
+    
     internal static readonly List<Parameter> Parameters = new();
     internal static readonly Dictionary<string, Parameter> ParametersByName;
 
@@ -89,7 +97,7 @@ public class DX7Voice : Sysex, ICanParse
     public override string? Type => "Single voice";
 
     public override string? Name =>
-        ParametersByName["Voice name"].GetValue(Data) as string;
+        ParametersByName["Voice name"].GetValue(Data, SingleVoiceHeaderLength) as string;
 
     public new static bool Test(byte[] data)
     {
@@ -105,22 +113,22 @@ public class DX7Voice : Sysex, ICanParse
         Parameters.Select(p => p.Name);
 
     public object GetParameterValue(string parameterName) =>
-        ParametersByName[parameterName].GetValue(Data);
+        ParametersByName[parameterName].GetValue(Data, SingleVoiceHeaderLength);
 
     public void Validate()
     {
-        Parameters.ForEach(p => p.Validate(Data));
+        Parameters.ForEach(p => p.Validate(Data, SingleVoiceHeaderLength));
     }
 
     public Dictionary<string, object> ToDictionary()
-        => Parameters.ToDictionary(p => p.Name, p => p.GetValue(Data));
+        => Parameters.ToDictionary(p => p.Name, p => p.GetValue(Data, SingleVoiceHeaderLength));
 
     public string ToJSON() => JsonSerializer.Serialize(
         ToDictionary(), new JsonSerializerOptions { WriteIndented = true });
 
     internal void UpdateChecksum()
     {
-        byte[] parameterData = Data.SubArray(6, 155);
+        byte[] parameterData = Data.SubArray(SingleVoiceHeaderLength, SingleVoiceParameterDataLength);
         byte checksum = Checksum.GetTwoComplement7Bit(parameterData);
         Data[161] = checksum;
     }

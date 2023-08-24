@@ -110,7 +110,7 @@ public class DX7Bank : Sysex, IHasSubItems
         => Data.SubArray(GetVoiceDataOffset(voiceNumber), 128);
 
     private int GetVoiceDataOffset(int voiceNumber)
-        => 6 + 32 * voiceNumber;
+        => 6 + 128 * voiceNumber;
 
     private Dictionary<string,object> VoiceToDictionary(int voiceNumber)
     {
@@ -135,7 +135,8 @@ public class DX7Bank : Sysex, IHasSubItems
         Dictionary<string, object> parameterValues = VoiceToDictionary(voiceNumber);
         byte[] data = new byte[DX7Voice.SingleVoiceDataSize];
         Array.Copy(DX7Voice.SingleVoiceDataHeader, data, DX7Voice.SingleVoiceDataHeader.Length);
-        DX7Voice.Parameters.ForEach(p => p.SetValue(data, parameterValues[p.Name]));
+        DX7Voice.Parameters.ForEach(p => p.SetValue(
+            data, parameterValues[p.Name], DX7Voice.SingleVoiceHeaderLength));
         data[data.Length - 1] = Constants.END_OF_SYSEX;
         var voice = new DX7Voice(data);
         voice.UpdateChecksum();

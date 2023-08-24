@@ -52,10 +52,11 @@ public abstract class Parameter
     /// for this parameter (length, range, etc)
     /// </summary>
     /// <exception cref="ValidationException">
+    /// <param name="extraOffset">Optional. Additional bytes to add to parameter's offset.</param>
     /// Thrown if the specified value is not within the allowable range.
     /// </exception>
-    public virtual void Validate(byte[] data)
-        => Validate(GetValue(data));
+    public virtual void Validate(byte[] data, int extraOffset = 0)
+        => Validate(GetValue(data, extraOffset));
 
     /// <summary>
     /// Returns this parameter's current value in the

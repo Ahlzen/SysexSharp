@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ahlzen.SysexSharp.SysexLib.Utils;
+using System;
 using System.Collections.Generic;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers;
@@ -55,7 +56,7 @@ public static class ManufacturerData
     /// (updated Aug 2017)
     /// </remarks>
     private static readonly Dictionary<byte[], string> _manufacturers =
-        new Dictionary<byte[], string>()
+        new Dictionary<byte[], string>(new ByteArrayComparer())
         {
             // Standard MIDI non-realtime messages
             { new byte[]{0xf7}, "MIDI"}, // Used e.g. for Sample Dumps (SDS)

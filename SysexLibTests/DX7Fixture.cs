@@ -23,8 +23,8 @@ public class DX7Fixture : BaseFixture
         List<string>? voiceNames = bank.GetSubItemNames()?.ToList();
         Assert.IsNotNull(voiceNames);
         Assert.AreEqual(32, voiceNames!.Count);
-        Assert.AreEqual("BRASS 1", voiceNames![0]);
-        Assert.AreEqual("BRASS 2", voiceNames![1]);
+        Assert.AreEqual("BRASS   1", voiceNames![0]);
+        Assert.AreEqual("BRASS   2", voiceNames![1]);
         Assert.AreEqual("TUB BELLS", voiceNames![25]);
 
         DX7Voice? voice = bank.GetSubItem(25) as DX7Voice;
