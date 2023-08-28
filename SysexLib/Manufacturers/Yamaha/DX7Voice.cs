@@ -101,6 +101,7 @@ public class DX7Voice : Sysex, ICanParse
 
     public new static bool Test(byte[] data)
     {
+        if (data == null) return false;
         if (!Sysex.Test(data)) return false;
         if (!ParsingUtils.MatchesPattern(data, SingleVoiceDataHeader)) return false;
         if (data.Length != SingleVoiceDataSize) return false;
