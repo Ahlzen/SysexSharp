@@ -16,7 +16,7 @@ public class DX7Voice : Sysex, ICanParse
 
     internal const int SingleVoiceHeaderLength = 6;
     internal const int SingleVoiceParameterDataLength = 155;
-    internal const int SingleVoiceDataSize =
+    internal const int SingleVoiceTotalLength =
         SingleVoiceHeaderLength +
         SingleVoiceParameterDataLength +
         2; // checksum + end-of-sysex
@@ -88,7 +88,7 @@ public class DX7Voice : Sysex, ICanParse
     #endregion
 
     public DX7Voice(byte[] data)
-        : base(data, null, SingleVoiceDataSize)
+        : base(data, null, SingleVoiceTotalLength)
     {
     }
 
@@ -104,7 +104,7 @@ public class DX7Voice : Sysex, ICanParse
         if (data == null) return false;
         if (!Sysex.Test(data)) return false;
         if (!ParsingUtils.MatchesPattern(data, SingleVoiceDataHeader)) return false;
-        if (data.Length != SingleVoiceDataSize) return false;
+        if (data.Length != SingleVoiceTotalLength) return false;
         return true;
     }
 

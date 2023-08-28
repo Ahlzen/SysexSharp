@@ -133,7 +133,7 @@ public class DX7Bank : Sysex, IHasSubItems
     public Sysex GetSubItem(int voiceNumber)
     {
         Dictionary<string, object> parameterValues = VoiceToDictionary(voiceNumber);
-        byte[] data = new byte[DX7Voice.SingleVoiceDataSize];
+        byte[] data = new byte[DX7Voice.SingleVoiceTotalLength];
         Array.Copy(DX7Voice.SingleVoiceDataHeader, data, DX7Voice.SingleVoiceDataHeader.Length);
         DX7Voice.Parameters.ForEach(p => p.SetValue(
             data, parameterValues[p.Name], DX7Voice.SingleVoiceHeaderLength));

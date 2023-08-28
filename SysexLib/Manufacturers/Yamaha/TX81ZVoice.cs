@@ -1,9 +1,8 @@
 ﻿using Ahlzen.SysexSharp.SysexLib.Parsing;
-using System;
+using Ahlzen.SysexSharp.SysexLib.Utils;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
@@ -13,16 +12,17 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 /// <remarks>
 /// TODO: Does the DX100 use the same sysex format?
 /// </remarks>
-internal class TX81ZVoice : Sysex // ICanParse
+internal class TX81ZVoice : Sysex, ICanParse
 {
     internal static readonly byte?[] SingleVoiceDataHeader =
     {
         0xf0, 0x43, null, 0x04, 0x10, 0x00
     };
-    internal const int SingleVoiceDataHeaderLength = 6;
-    internal const int SingleVoiceDataLength =
-        SingleVoiceDataHeaderLength +
-        93 + // data
+    internal const int SingleVoiceHeaderLength = 6;
+    internal const int SingleVoiceParameterDataLength = 93;
+    internal const int SingleVoiceTotalLength =
+        SingleVoiceHeaderLength +
+        SingleVoiceParameterDataLength +
         2; // checksum + end-of-sysex
 
     #region Parameters
@@ -91,21 +91,49 @@ internal class TX81ZVoice : Sysex // ICanParse
     #endregion
 
     public TX81ZVoice(byte[] data)
-        : base(data, null, SingleVoiceDataLength) { }
+        : base(data, null, SingleVoiceTotalLength) { }
 
     public override string? Device => "TX81Z";
 
     public override string? Type => "Single voice";
 
     public override string? Name =>
-        ParametersByName["Voice name"].GetValue(Data, SingleVoiceDataHeaderLength) as string;
+        ParametersByName["Voice name"].GetValue(Data, SingleVoiceHeaderLength) as string;
 
     public new static bool Test(byte[] data)
     {
         if (data == null) return false;
         if (!Sysex.Test(data)) return false;
         if (!ParsingUtils.MatchesPattern(data, SingleVoiceDataHeader)) return false;
-        if (data.Length != SingleVoiceDataLength) return false;
+        if (data.Length != SingleVoiceTotalLength) return false;
         return true;
     }
+
+    #region ICanParse
+
+    public IEnumerable<string> ParameterNames =>
+        Parameters.Select(p => p.Name);
+
+    public object GetParameterValue(string parameterName) =>
+        ParametersByName[parameterName].GetValue(Data, SingleVoiceHeaderLength);
+
+    public void Validate()
+    {
+        Parameters.ForEach(p => p.Validate(Data, SingleVoiceHeaderLength));
+    }
+
+    public Dictionary<string, object> ToDictionary()
+        => Parameters.ToDictionary(p => p.Name, p => p.GetValue(Data, SingleVoiceHeaderLength));
+
+    public string ToJSON() => JsonSerializer.Serialize(
+        ToDictionary(), new JsonSerializerOptions { WriteIndented = true });
+
+    internal void UpdateChecksum()
+    {
+        byte[] parameterData = Data.SubArray(SingleVoiceHeaderLength, SingleVoiceParameterDataLength);
+        byte checksum = Checksum.GetTwoComplement7Bit(parameterData);
+        Data[SingleVoiceParameterDataLength-2] = checksum;
+    }
+
+    #endregion
 }
