@@ -70,6 +70,14 @@ public class Sysex
     /// </summary>
     public virtual bool IsKnownType => !string.IsNullOrEmpty(Type);
 
+    /// <summary>
+    /// Internal constructor for an empty sysex, e.g. when building
+    /// a new Sysex from parameter data.
+    /// </summary>
+    internal Sysex(int length)
+    {
+        Data = new byte[length];
+    }
 
     /// <param name="data">Raw binary data, including start/end-of-sysex bytes.</param>
     /// <param name="name">Filename, bank name etc, or null if not known/applicable.</param>

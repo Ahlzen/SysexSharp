@@ -18,16 +18,16 @@ public class DX7Fixture : BaseFixture
         Assert.IsInstanceOf<DX7Bank>(sysex);
         
         DX7Bank bank = (DX7Bank)sysex;
-        Assert.AreEqual(32, bank.GetSubItemCount());
+        Assert.AreEqual(32, bank.ItemCount);
 
-        List<string>? voiceNames = bank.GetSubItemNames()?.ToList();
+        List<string>? voiceNames = bank.GetItemNames()?.ToList();
         Assert.IsNotNull(voiceNames);
         Assert.AreEqual(32, voiceNames!.Count);
         Assert.AreEqual("BRASS   1", voiceNames![0]);
         Assert.AreEqual("BRASS   2", voiceNames![1]);
         Assert.AreEqual("TUB BELLS", voiceNames![25]);
 
-        DX7Voice? voice = bank.GetSubItem(25) as DX7Voice;
+        DX7Voice? voice = bank.GetItem(25) as DX7Voice;
         Assert.IsNotNull(voice);
         Assert.AreEqual("Yamaha", voice!.ManufacturerName);
         Assert.AreEqual("DX7", voice!.Device);
