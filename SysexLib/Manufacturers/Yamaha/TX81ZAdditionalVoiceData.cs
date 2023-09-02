@@ -1,5 +1,6 @@
 ﻿using Ahlzen.SysexSharp.SysexLib.Parsing;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
@@ -26,7 +27,7 @@ public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
     // Offsets are relative to the start of the Parameter Data section
 
     internal static readonly List<Parameter> TX81ZAdditionalVoiceParameters = new();
-    internal static readonly Dictionary<string, Parameter> TX81ZAdditionalVoiceParametersByName = new();
+    internal static readonly Dictionary<string, Parameter> TX81ZAdditionalVoiceParametersByName;
 
     static TX81ZAdditionalVoiceData()
     {
@@ -43,6 +44,8 @@ public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
         TX81ZAdditionalVoiceParameters.Add(new NumericParameter(20, "Reverb Rate", 0, 7));
         TX81ZAdditionalVoiceParameters.Add(new NumericParameter(21, "Foot Controller Pitch", 0, 99));
         TX81ZAdditionalVoiceParameters.Add(new NumericParameter(22, "Foot Controller Amplitude", 0, 99));
+
+        TX81ZAdditionalVoiceParametersByName = TX81ZAdditionalVoiceParameters.ToDictionary(p => p.Name);
     }
 
     #endregion

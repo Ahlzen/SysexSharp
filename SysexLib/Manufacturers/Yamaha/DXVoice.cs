@@ -29,8 +29,6 @@ public abstract class DXVoice : Sysex, ICanParse
     /// </summary>
     protected virtual int ChecksumDataStartOffset => HeaderLength;
 
-    //internal DXVoice(int length) : base(length) { }
-
     /// <summary>
     /// Constructor from existing data.
     /// </summary>
