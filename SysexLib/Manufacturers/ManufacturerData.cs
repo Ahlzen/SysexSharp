@@ -58,8 +58,10 @@ public static class ManufacturerData
     private static readonly Dictionary<byte[], string> _manufacturers =
         new Dictionary<byte[], string>(new ByteArrayComparer())
         {
-            // Standard MIDI non-realtime messages
-            { new byte[]{0xf7}, "MIDI"}, // Used e.g. for Sample Dumps (SDS)
+            // Universal MIDI messages, defined by the MIDI association.
+            // Used e.g. for Sample Dumps (SDS), MIDI Time Code, Identity Requests etc.
+            { new byte[]{0x7e}, "MIDI"}, // non-realtime universal messages
+            { new byte[]{0x7f}, "MIDI"}, // realtime universal messages
 
             // "Japanese group"
             { new byte[]{0x40}, "Kawai"},
