@@ -29,9 +29,11 @@ public class UniversalSysex : Sysex
 	{
 		// Non-realtime types (0x7e) defined by the MIDI Association
 
+        // Sample Dump Standard (SDS)
 		new(){SubId1 = 0x01, Type = "Sample Dump Header" },
 		new(){SubId1 = 0x02, Type = "Sample Data Packet" },
 		new(){SubId1 = 0x03, Type = "Sample Dump Request" },
+
 		new(){SubId1 = 0x04, Type = "MIDI Time Code",
 			Subtypes = new Dictionary<byte, string>{
 			{ 0x00, "Special" },
@@ -167,7 +169,7 @@ public class UniversalSysex : Sysex
     internal UniversalSysex(byte[] data, string? name = null, int? expectedLength = null)
         : base(data, name, expectedLength)
     {
-        if (data.Length <= 6)
+        if (data.Length < 6)
             throw new ArgumentException(nameof(data), "Not enough data for a valid Universal System Exclusive message.");
 
         byte universalMarker = data[1];

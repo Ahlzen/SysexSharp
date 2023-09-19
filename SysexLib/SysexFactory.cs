@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Ahlzen.SysexSharp.SysexLib.Manufacturers.MIDI;
 using Ahlzen.SysexSharp.SysexLib.Manufacturers.Roland;
 using Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
@@ -21,6 +22,8 @@ public static class SysexFactory
 
         switch (manufacturerName)
         {
+            case "MIDI": // Universal sysex types
+                return new UniversalSysex(data);
             case "Roland":
                 return new RolandSysex(data, filename);
             case "Yamaha":
