@@ -8,7 +8,8 @@ public class BehringerSysex : Sysex
 {
     private static readonly Dictionary<byte?[], string> BehringerHeaders = new()
     {
-        {new byte?[] { 0xf0, 0x00, 0x20, 0x32, 0x00, 0x01, 0x24, 0x00 }, "Pro-800" }
+        // From https://github.com/samstaton/pro800/tree/main
+        { new byte?[] { 0xf0, 0x00, 0x20, 0x32, 0x00, 0x01, 0x24, 0x00 }, "Pro-800" }
     };
 
     public new string? Device { get; set; }
