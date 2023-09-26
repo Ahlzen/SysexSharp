@@ -3,6 +3,7 @@ Device and Manufacturer Specific Support
 
 - [ ] Not supported
 - [x] Recognized
+
 **bold text** = Improved support (parsing sysex values, extracting items from banks, etc)
 
 Roland
@@ -139,13 +140,14 @@ Roland
 - [x] XV-5080 (same as XV-3080)
 
 Yamaha
-O DX7 (also DX1?, DX5, DX7IID, DX7IIFD, TX7, ?)
-* DX9, DX11, DX21, DX27, DX100, DX200, FB-01, FS1R, TX802, TX816
-* TX81Z
-* A3000
-* AN1x, CS1x, CS2x, CS6x, AN200, RM1x
-* SY22, SY35, SY55, SY77, SY85, SY99
-* EX5, EX7, Motif
-* MX49, MX61, MX88
-* QS300, QY700 
-* RS7000
+------
+- [x] **DX7 (also DX1?, DX5, DX7IID, DX7IIFD, TX7, ?)**
+- [ ]DX9, DX11, DX21, DX27, DX100, DX200, FB-01, FS1R, TX802, TX816
+- [x] **TX81Z**
+- [ ] A3000
+- [ ] AN1x, CS1x, CS2x, CS6x, AN200, RM1x
+- [ ] SY22, SY35, SY55, SY77, SY85, SY99
+- [ ] EX5, EX7, Motif
+- [ ] MX49, MX61, MX88
+- [ ] QS300, QY700 
+- [ ] RS7000
