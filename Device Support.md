@@ -1,0 +1,151 @@
+Device and Manufacturer Specific Support
+========================================
+
+- [ ] Not supported
+- [x] Recognized
+**bold text** = Improved support (parsing sysex values, extracting items from banks, etc)
+
+Roland
+------
+- [x] Roland GS (many devices use this in GS mode)
+- [x] Alpha Juno-1
+- [x] Alpha Juno 2
+- [ ] CMU-800
+- [ ] CMU-810
+- [ ] CR-68
+- [ ] CR-78
+- [ ] CR-8000
+- [x] D-10
+- [x] D-20
+- [x] D-50
+- [x] D-70
+- [x] D-110 (same as D-20)
+- [ ] D2
+- [ ] DJ-70
+- [ ] EG-101
+- [ ] EM-101
+- [ ] Fantom-S
+- [ ] Fantom-X
+- [ ] Gaia SH-01
+- [ ] GR-300
+- [ ] GR-500
+- [ ] GR-700
+- [ ] HS-60
+- [x] JD-800
+- [ ] JD-990
+- [ ] JD-XA
+- [ ] JP-8000
+- [ ] JP-8080
+- [ ] Juno-6
+- [ ] Juno-60
+- [ ] Juno-106
+- [ ] Juno-D
+- [ ] Juno-Di
+- [ ] Juno-DS61
+- [ ] Juno-G
+- [ ] Juno-Stage
+- [ ] Jupiter-4
+- [ ] Jupiter-6
+- [ ] Jupiter-8
+- [ ] Jupiter-80
+- [ ] Jupiter-XM
+- [x] JV-1000
+- [x] JV-1010 (same as JV-1080)
+- [x] JV-1080
+- [x] JV-2080 (same as JV-1080)
+- [x] JV-30
+- [x] JV-80 (same as JV-1000)
+- [x] JV-880 (same as JV-1000)
+- [x] JV-90 (same as JV-1000)
+- [ ] JW-50 (only GS mode)
+- [x] JX-1
+- [ ] JX-3P (has MIDI but no sysex support)
+- [x] JX-8P
+- [x] JX-10
+- [x] JX-305
+- [ ] MC-09
+- [ ] MC-202
+- [ ] MC-303
+- [ ] MC-307
+- [ ] MC-505
+- [ ] MC-808
+- [ ] MC-909
+- [ ] MKS-7
+- [ ] MKS-10 (has MIDI but no sysex support)
+- [ ] MKS-30 (has MIDI but no sysex support)
+- [ ] MKS-50 (has MIDI but no sysex support)
+- [x] MKS-70
+- [ ] MKS-80
+- [x] MT-32 (same as D-20)
+- [ ] Programmers
+- [ ] ProMars MRS-2
+- [ ] R-8
+- [ ] R-70
+- [ ] RE-201 Space Echo
+- [ ] Rhythm 330
+- [ ] RS-09
+- [ ] RS-50
+- [ ] RS-101
+- [ ] RS-202 Strings
+- [ ] RS-505 Paraphonic
+- [ ] S-10
+- [ ] S-50
+- [ ] S-220
+- [ ] S-330
+- [ ] S-770
+- [ ] Saturn 09
+- [ ] SC-88
+- [ ] SH-09
+- [ ] SH-1
+- [ ] SH-1000
+- [ ] SH-101
+- [ ] SH-2
+- [ ] SH-2000
+- [ ] SH-201
+- [ ] SH-32
+- [ ] SH-3a
+- [ ] SH-5
+- [ ] SH-7
+- [ ] SonicCell
+- [ ] SP-404
+- [ ] SP-808
+- [ ] SVC-350 Vocoder
+- [ ] System 100
+- [ ] System 100m
+- [ ] System 700
+- [ ] TB-303
+- [ ] TR-505
+- [ ] TR-606
+- [ ] TR-626
+- [ ] TR-66
+- [ ] TR-707
+- [ ] TR-727
+- [ ] TR-808
+- [ ] TR-909
+- [ ] U-110
+- [ ] U-20
+- [ ] V-Synth
+- [ ] VP-550
+- [ ] VP-770
+- [ ] VP-9000
+- [ ] W-30
+- [x] XP-10
+- [x] XP-30 (same as JV-1080)
+- [x] XP-50 (same as JV-1080)
+- [x] XP-60 (same as JV-1080)
+- [x] XP-80 (same as JV-1080)
+- [x] XV-3080
+- [x] XV-5050 (same as XV-3080)
+- [x] XV-5080 (same as XV-3080)
+
+Yamaha
+O DX7 (also DX1?, DX5, DX7IID, DX7IIFD, TX7, ?)
+* DX9, DX11, DX21, DX27, DX100, DX200, FB-01, FS1R, TX802, TX816
+* TX81Z
+* A3000
+* AN1x, CS1x, CS2x, CS6x, AN200, RM1x
+* SY22, SY35, SY55, SY77, SY85, SY99
+* EX5, EX7, Motif
+* MX49, MX61, MX88
+* QS300, QY700 
+* RS7000

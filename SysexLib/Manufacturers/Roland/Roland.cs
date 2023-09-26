@@ -35,7 +35,8 @@ public sealed class RolandSysex : Sysex
     {
         // Single-byte IDs
         { new byte?[] { 0x14 }, "D-50" },
-        { new byte?[] { 0x16 }, "D-20" }, // also: MT-32
+        { new byte?[] { 0x16 }, "D-20" }, // also: MT-32, D-10, D-110
+        { new byte?[] { 0x39 }, "D-70" },
         { new byte?[] { 0x3d }, "JD-800" },
         { new byte?[] { 0x3d }, "JX-1" },
         { new byte?[] { 0x42 }, "GS" }, // used by several devices when in GS mode
@@ -83,13 +84,13 @@ public sealed class RolandSysex : Sysex
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x31 }, 24, "Juno-106", "Manual mode"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x32 }, 7,  "Juno-106", "Control change"),
 
-        // JX-8P:  [Start-of-sysex, Roland ID, Operation code, Unit#, JX-8P ID, Level, Group, ...]
+        // JX-8P:  [Start-of-sysex, Roland ID, Operation code, Unit#, JX-8P ID, Level, Group, ...]  TODO: Add lengths
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x31, 0x34, null, 0x21, 0x20, 0x01 }, null, "JX-8P", "Program number"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x35, null, 0x21, 0x20, 0x01 }, null, "JX-8P", "All tone parameters"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x36, null, 0x21, 0x20, 0x01 }, null, "JX-8P", "Individual tone parameter"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x35, null, 0x21, 0x30, 0x01 }, null, "JX-8P", "All patch parameters"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x31, 0x36, null, 0x21, 0x30, 0x01 }, null, "JX-8P", "Individual patch parameter"),
-        
+
         // JX-10
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x40, null, 0x24 }, null, "JX-10", "Send request"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x41, null, 0x24 }, null, "JX-10", "Data request"),
@@ -98,6 +99,12 @@ public sealed class RolandSysex : Sysex
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x45, null, 0x24 }, 6,    "JX-10", "End-of-file"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x4e, null, 0x24 }, 6,    "JX-10", "Communication error"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x4f, null, 0x24 }, 6,    "JX-10", "Rejection"),
+
+        // Alpha Juno-1 [Start-of-sysex, Roland ID, Operation code, Unit#, Format type (Ju1/2), Level, Group, ...]
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x35, null, 0x23, 0x20, 0x01}, 54, "Alpha Juno-1", "All tone parameters"), // also Alpha Juno-2
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x35, null, 0x23, 0x20, 0x01}, 44, "Alpha Juno-1", "All tone parameters (without tone name)"),
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x36, null, 0x23, 0x20, 0x01}, null, "Alpha Juno-1", "Individual tone parameter"), // also Alpha Juno-2
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x37, null, 0x23, 0x20, 0x01}, null, "Alpha Juno-1", "Bulk dump"),
 
         // MKS-70
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x34, null, 0x24 }, 11,  "MKS-70", "Program number (patch)"),
