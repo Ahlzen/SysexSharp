@@ -11,45 +11,47 @@ Roland
 - [x] Roland GS (many devices use this in GS mode)
 - [x] Alpha Juno-1
 - [x] Alpha Juno 2
-- [ ] CMU-800
-- [ ] CMU-810
-- [ ] CR-68
-- [ ] CR-78
-- [ ] CR-8000
+- [ ] CMU-800 (no MIDI)
+- [ ] CMU-810 (no MIDI)
+- [ ] CR-68 (no MIDI)
+- [ ] CR-78 (no MIDI)
+- [ ] CR-8000 (no MIDI)
 - [x] D-10
 - [x] D-20
 - [x] D-50
 - [x] D-70
 - [x] D-110 (same as D-20)
-- [ ] D2
-- [ ] DJ-70
-- [ ] EG-101
-- [ ] EM-101
-- [ ] Fantom-S
-- [ ] Fantom-X
-- [ ] Gaia SH-01
-- [ ] GR-300
-- [ ] GR-500
-- [ ] GR-700
-- [ ] HS-60
+- [x] D2
+- [x] DJ-70
+- [x] EG-101
+- [ ] EM-101 (has MIDI but no sysex support)
+- [x] Fantom-S
+- [x] Fantom-X
+- [x] Gaia SH-01
+- [ ] GR-300 (no MIDI)
+- [ ] GR-500 (no MIDI)
+- [ ] GR-700 (has MIDI but no sysex support)
+- [x] HS-60
 - [x] JD-800
-- [ ] JD-990
-- [ ] JD-XA
-- [ ] JP-8000
-- [ ] JP-8080
-- [ ] Juno-6
-- [ ] Juno-60
-- [ ] Juno-106
-- [ ] Juno-D
-- [ ] Juno-Di
-- [ ] Juno-DS61
-- [ ] Juno-G
-- [ ] Juno-Stage
-- [ ] Jupiter-4
-- [ ] Jupiter-6
-- [ ] Jupiter-8
-- [ ] Jupiter-80
-- [ ] Jupiter-XM
+- [x] JD-990
+- [x] JD-XA
+- [x] JP-8000
+- [x] JP-8080
+- [ ] Juno-6 (no MIDI)
+- [ ] Juno-60 (no MIDI)
+- [x] Juno-106
+- [x] Juno-D
+- [x] Juno-Di
+- [x] Juno-DS61
+- [x] Juno-DS88
+- [x] Juno-G
+- [x] Juno-Stage
+- [ ] Jupiter-4 (no MIDI)
+- [ ] Jupiter-6 (has MIDI but no sysex support)
+- [ ] Jupiter-8 (no MIDI)
+- [x] Jupiter-80
+- [ ] Jupiter-X
+- [ ] Jupiter-Xm
 - [x] JV-1000
 - [x] JV-1010 (same as JV-1080)
 - [x] JV-1080
@@ -64,19 +66,19 @@ Roland
 - [x] JX-8P
 - [x] JX-10
 - [x] JX-305
-- [ ] MC-09
-- [ ] MC-202
-- [ ] MC-303
-- [ ] MC-307
-- [ ] MC-505
-- [ ] MC-808
-- [ ] MC-909
-- [ ] MKS-7
+- [x] MC-09
+- [ ] MC-202 (no MIDI)
+- [x] MC-303
+- [x] MC-307
+- [x] MC-505
+- [x] MC-808
+- [x] MC-909
+- [x] MKS-7
 - [ ] MKS-10 (has MIDI but no sysex support)
 - [ ] MKS-30 (has MIDI but no sysex support)
 - [ ] MKS-50 (has MIDI but no sysex support)
 - [x] MKS-70
-- [ ] MKS-80
+- [x] MKS-80
 - [x] MT-32 (same as D-20)
 - [ ] Programmers
 - [ ] ProMars MRS-2
@@ -142,7 +144,7 @@ Roland
 Yamaha
 ------
 - [x] **DX7 (also DX1?, DX5, DX7IID, DX7IIFD, TX7, ?)**
-- [ ]DX9, DX11, DX21, DX27, DX100, DX200, FB-01, FS1R, TX802, TX816
+- [ ] DX9, DX11, DX21, DX27, DX100, DX200, FB-01, FS1R, TX802, TX816
 - [x] **TX81Z**
 - [ ] A3000
 - [ ] AN1x, CS1x, CS2x, CS6x, AN200, RM1x

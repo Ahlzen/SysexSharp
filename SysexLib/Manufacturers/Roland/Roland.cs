@@ -14,7 +14,7 @@ public sealed class RolandSysex : Sysex
     {
         0xf0, // Start-of-sysex
         0x41, // Roland
-        null, // Device id (channel) (usually 0-31)
+        null, // Device id (channel) (usually 0-31; 0x7f - broadcast/all?)
         null, // Model id (may be multiple bytes)
         null, // Command id
     };
@@ -37,29 +37,37 @@ public sealed class RolandSysex : Sysex
         { new byte?[] { 0x14 }, "D-50" },
         { new byte?[] { 0x16 }, "D-20" }, // also: MT-32, D-10, D-110
         { new byte?[] { 0x39 }, "D-70" },
+        { new byte?[] { 0x3a }, "MC-307" }, // listed in manual as "MC-307 Quick"
         { new byte?[] { 0x3d }, "JD-800" },
         { new byte?[] { 0x3d }, "JX-1" },
         { new byte?[] { 0x42 }, "GS" }, // used by several devices when in GS mode
         { new byte?[] { 0x46 }, "JV-1000" }, // also: JV-80, JV-90, JV-880
         { new byte?[] { 0x4d }, "JV-30" },
+        { new byte?[] { 0x53 }, "DJ-70" },
         { new byte?[] { 0x57 }, "JD-990" },
         { new byte?[] { 0x6a }, "JV-1080" }, // also: JV-1010, JV-2080, XP-30, XP-50, XP-60, XP-80
         { new byte?[] { 0x7b }, "XP-10"},
         
-        // jw-50 uses only GS mode
-        // jx-3p has MIDI but does no sysex support
-        // mks-10 has MIDI but does no sysex support
-        // mks-30 has MIDI but does no sysex support
-        // mks-50 has MIDI but does no sysex support
-
-        // alpha juno-1
-
-        // mks-80
-
         // Multi-byte IDs
+        { new byte?[] { 0x00, 0x03 }, "MC-303" },
         { new byte?[] { 0x00, 0x06 }, "JP-8000" }, // also: JP-8080
-        { new byte?[] { 0x00, 0x0b }, "JX-305" },
+        { new byte?[] { 0x00, 0x0b }, "JX-305" }, // also: MC-307, MC-505
+        { new byte?[] { 0x00, 0x0d }, "D2" },
         { new byte?[] { 0x00, 0x10 }, "XV-3080" }, // also: XV-5050, XV-5080
+        { new byte?[] { 0x00, 0x18 }, "EG-101" },
+        { new byte?[] { 0x00, 0x4f }, "MC-09" },
+        { new byte?[] { 0x00, 0x59 }, "MC-909" },
+        { new byte?[] { 0x00, 0x64 }, "Juno-D" },
+        { new byte?[] { 0x00, 0x6b }, "Fantom-S" }, // also: Fantom-S88, Fantom-X6, Fantom-X7, Fantom-X8
+        { new byte?[] { 0x00, 0x00, 0x14 }, "MC-808" },
+        { new byte?[] { 0x00, 0x00, 0x15 }, "Juno-G" },
+        { new byte?[] { 0x00, 0x00, 0x25 }, "Juno-Stage" },
+        { new byte?[] { 0x00, 0x00, 0x3a }, "Juno-Di" }, // also: Juno-DS61, Juno-DS88
+        { new byte?[] { 0x00, 0x00, 0x41 }, "Gaia SH-01" },
+        { new byte?[] { 0x00, 0x00, 0x55 }, "Jupiter-80" },
+        { new byte?[] { 0x00, 0x00, 0x00, 0x0F }, "JD-XA" },
+        { new byte?[] { 0x00, 0x00, 0x00, 0x65 }, "Jupiter-X" }, // also: Jupiter-Xm
+
     };
 
     internal class LegacyRolandHeader
@@ -80,7 +88,7 @@ public sealed class RolandSysex : Sysex
     private static readonly List<LegacyRolandHeader> LegacyRolandHeaders = new()
     {
         // Juno-106
-        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x30 }, 24, "Juno-106", "Patch data"), // also MKS-7 (melody/chord/bass data)
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x30 }, 24, "Juno-106", "Patch data"), // also HS-60, MKS-7 (melody/chord/bass data)
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x31 }, 24, "Juno-106", "Manual mode"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x32 }, 7,  "Juno-106", "Control change"),
 
@@ -115,6 +123,13 @@ public sealed class RolandSysex : Sysex
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x36, null, 0x24 }, 10,  "MKS-70", "Tone parameter"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x37, null, 0x24 }, 106, "MKS-70", "Patch bulk dump"),
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x37, null, 0x24 }, 69,  "MKS-70", "Tone bulk dump"),
+
+        // MKS-80
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x36, null, 0x20, 0x20 }, null, "MKS-80", "Individual tone parameter(s)"), // a.k.a. IPR
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x36, null, 0x20, 0x30 }, null, "MKS-80", "Individual patch parameter(s)"), // a.k.a. IPR
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x35, null, 0x20, 0x20 }, 56, "MKS-80", "All tone parameters"),
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x35, null, 0x20, 0x30 }, 23, "MKS-80", "All patch parameters"),
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x34, null, 0x20, 0x30 }, 11, "MKS-80", "Program number"), // a.k.a. PGR (program/patch number)
     };
 
     public new string? Device { get; set; }
