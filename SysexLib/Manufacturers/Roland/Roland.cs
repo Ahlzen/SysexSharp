@@ -34,17 +34,27 @@ public sealed class RolandSysex : Sysex
     private static readonly Dictionary<byte?[], string> RolandDeviceIds = new()
     {
         // Single-byte IDs
+        { new byte?[] { 0x10 }, "S-10" }, // also: S-220, MKS-100
         { new byte?[] { 0x14 }, "D-50" },
         { new byte?[] { 0x16 }, "D-20" }, // also: MT-32, D-10, D-110
+        { new byte?[] { 0x18 }, "S-50" },
+        { new byte?[] { 0x1d }, "TR-626" },
+        { new byte?[] { 0x1e }, "S-550" }, // also: S-330
+        { new byte?[] { 0x28 }, "R-8" },
+        { new byte?[] { 0x2B }, "U-110" }, // also: U-20, U-220
+        { new byte?[] { 0x34 }, "S-770" },
         { new byte?[] { 0x39 }, "D-70" },
         { new byte?[] { 0x3a }, "MC-307" }, // listed in manual as "MC-307 Quick"
         { new byte?[] { 0x3d }, "JD-800" },
         { new byte?[] { 0x3d }, "JX-1" },
         { new byte?[] { 0x42 }, "GS" }, // used by several devices when in GS mode
+        { new byte?[] { 0x45 }, "Display Data" }, // ? used to modify screen contents by e.g. SC-55, SC-88
         { new byte?[] { 0x46 }, "JV-1000" }, // also: JV-80, JV-90, JV-880
         { new byte?[] { 0x4d }, "JV-30" },
+        { new byte?[] { 0x50 }, "R-70" },
         { new byte?[] { 0x53 }, "DJ-70" },
         { new byte?[] { 0x57 }, "JD-990" },
+        { new byte?[] { 0x5e }, "R-8 MKII" },
         { new byte?[] { 0x6a }, "JV-1080" }, // also: JV-1010, JV-2080, XP-30, XP-50, XP-60, XP-80
         { new byte?[] { 0x7b }, "XP-10"},
         
@@ -55,14 +65,19 @@ public sealed class RolandSysex : Sysex
         { new byte?[] { 0x00, 0x0d }, "D2" },
         { new byte?[] { 0x00, 0x10 }, "XV-3080" }, // also: XV-5050, XV-5080
         { new byte?[] { 0x00, 0x18 }, "EG-101" },
+        { new byte?[] { 0x00, 0x1d }, "VP-9000" },
+        { new byte?[] { 0x00, 0x4a }, "SH-32" },
         { new byte?[] { 0x00, 0x4f }, "MC-09" },
+        { new byte?[] { 0x00, 0x53 }, "V-Synth" },
         { new byte?[] { 0x00, 0x59 }, "MC-909" },
-        { new byte?[] { 0x00, 0x64 }, "Juno-D" },
+        { new byte?[] { 0x00, 0x64 }, "Juno-D" }, // also: RS-50, RS-70
         { new byte?[] { 0x00, 0x6b }, "Fantom-S" }, // also: Fantom-S88, Fantom-X6, Fantom-X7, Fantom-X8
         { new byte?[] { 0x00, 0x00, 0x14 }, "MC-808" },
         { new byte?[] { 0x00, 0x00, 0x15 }, "Juno-G" },
-        { new byte?[] { 0x00, 0x00, 0x25 }, "Juno-Stage" },
+        { new byte?[] { 0x00, 0x00, 0x16 }, "SH-201" },
+        { new byte?[] { 0x00, 0x00, 0x25 }, "Juno-Stage" }, // also: SonicCell
         { new byte?[] { 0x00, 0x00, 0x3a }, "Juno-Di" }, // also: Juno-DS61, Juno-DS88
+        { new byte?[] { 0x00, 0x00, 0x3b }, "VP-770" },
         { new byte?[] { 0x00, 0x00, 0x41 }, "Gaia SH-01" },
         { new byte?[] { 0x00, 0x00, 0x55 }, "Jupiter-80" },
         { new byte?[] { 0x00, 0x00, 0x00, 0x0F }, "JD-XA" },
@@ -87,6 +102,17 @@ public sealed class RolandSysex : Sysex
 
     private static readonly List<LegacyRolandHeader> LegacyRolandHeaders = new()
     {
+        // TR-707 (also: TR-727, TR-909)
+        // TODO: Used by other Roland devices as well?
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x50, 0xf7 }, 4, "TR-707", "Want to send file"), // (WSF)
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x51, 0xf7 }, 4, "TR-707", "Request file"), // (RQF)
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x52, 0x01 }, 519, "TR-909", "Data"), // (DAT) 01 format type = 909
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x52, 0x02 }, 519, "TR-707", "Data"), // (DAT) 02 format type = 707/727
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x53, 0xf7 }, 4, "TR-707", "Acknowledge"), // (PAS)
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x54, 0xf7 }, 4, "TR-707", "Continue"), // (CNT)
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x70, 0xf7 }, 4, "TR-909", "Abort"),
+        new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x71, 0xf7 }, 4, "TR-909", "Error"),
+
         // Juno-106
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x30 }, 24, "Juno-106", "Patch data"), // also HS-60, MKS-7 (melody/chord/bass data)
         new LegacyRolandHeader(new byte?[] { 0xf0, 0x41, 0x31 }, 24, "Juno-106", "Manual mode"),
@@ -154,7 +180,7 @@ public sealed class RolandSysex : Sysex
                 {
                     Device = legacyHeader.Device;
                     Type = legacyHeader.Type;
-                    IsKnownType = true;
+                    IsKnownType = true
                     return;
                 }
             }

@@ -79,59 +79,61 @@ Roland
 - [ ] MKS-50 (has MIDI but no sysex support)
 - [x] MKS-70
 - [x] MKS-80
+- [x] MKS-100
 - [x] MT-32 (same as D-20)
-- [ ] Programmers
-- [ ] ProMars MRS-2
-- [ ] R-8
-- [ ] R-70
-- [ ] RE-201 Space Echo
-- [ ] Rhythm 330
-- [ ] RS-09
-- [ ] RS-50
-- [ ] RS-101
-- [ ] RS-202 Strings
-- [ ] RS-505 Paraphonic
-- [ ] S-10
-- [ ] S-50
-- [ ] S-220
-- [ ] S-330
-- [ ] S-770
-- [ ] Saturn 09
-- [ ] SC-88
-- [ ] SH-09
-- [ ] SH-1
-- [ ] SH-1000
-- [ ] SH-101
-- [ ] SH-2
-- [ ] SH-2000
-- [ ] SH-201
-- [ ] SH-32
-- [ ] SH-3a
-- [ ] SH-5
-- [ ] SH-7
-- [ ] SonicCell
-- [ ] SP-404
-- [ ] SP-808
-- [ ] SVC-350 Vocoder
-- [ ] System 100
-- [ ] System 100m
-- [ ] System 700
-- [ ] TB-303
-- [ ] TR-505
-- [ ] TR-606
-- [ ] TR-626
-- [ ] TR-66
-- [ ] TR-707
-- [ ] TR-727
-- [ ] TR-808
-- [ ] TR-909
-- [ ] U-110
-- [ ] U-20
-- [ ] V-Synth
-- [ ] VP-550
-- [ ] VP-770
-- [ ] VP-9000
-- [ ] W-30
+- [ ] ProMars MRS-2 (no MIDI)
+- [x] R-8
+- [x] R-8 MKII
+- [x] R-70
+- [ ] Rhythm 330 (no MIDI)
+- [ ] RS-09 (no MIDI)
+- [x] RS-50
+- [x] RS-70
+- [ ] RS-101 (no MIDI)
+- [ ] RS-202 Strings (no MIDI)
+- [ ] RS-505 Paraphonic (no MIDI)
+- [x] S-10
+- [x] S-50
+- [x] S-220
+- [x] S-330
+- [x] S-550
+- [x] S-770
+- [ ] Saturn 09 (no MIDI)
+- [ ] SC-55 (only GS mode)
+- [ ] SC-55mkII (only GS mode)
+- [ ] SC-88 (only GS mode)
+- [ ] SC-88Pro (only GS mode)
+- [ ] SH-09 (no MIDI)
+- [ ] SH-1 (no MIDI)
+- [ ] SH-1000 (no MIDI)
+- [ ] SH-101 (no MIDI)
+- [ ] SH-2 (no MIDI)
+- [ ] SH-2000 (no MIDI)
+- [x] SH-201
+- [x] SH-32
+- [ ] SH-3a (no MIDI)
+- [ ] SH-5 (no MIDI)
+- [ ] SH-7 (no MIDI)
+- [x] SonicCell
+- [ ] SP-404 (has MIDI but no sysex support)
+- [ ] SP-808 (has MIDI but no sysex support)
+- [ ] TB-303 (no MIDI)
+- [ ] TR-505 (has MIDI but no sysex support)
+- [ ] TR-606 (no MIDI)
+- [x] TR-626 
+- [ ] TR-66 (no MIDI)
+- [x] TR-707
+- [x] TR-727
+- [ ] TR-808 (no MIDI)
+- [x] TR-909
+- [x] U-20
+- [x] U-110
+- [x] U-220
+- [x] V-Synth
+- [ ] VP-550 (only Universal Non-realtime sysex support)
+- [x] VP-770
+- [x] VP-9000
+- [ ] W-30 (has MIDI but no sysex support)
 - [x] XP-10
 - [x] XP-30 (same as JV-1080)
 - [x] XP-50 (same as JV-1080)
