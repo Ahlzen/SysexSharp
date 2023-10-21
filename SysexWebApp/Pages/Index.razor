@@ -1,4 +1,37 @@
 ﻿@page "/"
+@using Ahlzen.SysexSharp.SysexLib
 
 <h1>SysexSharp</h1>
 
+<fieldset class="layoutbox">
+    <legend>Library</legend>
+    <ul>
+        @foreach (Sysex sysex in _sysexes)
+        {
+            <li class="sysexItem">
+                <div class="title">@sysex.Name ?? "unknown"</div>
+                <div class="details">
+                    <div class="length">@sysex.Length bytes</div>
+                    @if (sysex.ManufacturerName != null)
+                    {
+                        <div class="manufacturer">@sysex.ManufacturerName</div>
+                    }
+                    @if (sysex.Type != null)
+                    {
+                        <div class="type">@sysex.Type</div>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+    
+    <h3>Add files here:</h3>
+    <InputFile OnChange="@LoadFiles" />
+    
+    
+</fieldset>
+
+<fieldset class="layoutbox">
+    <h3>Log</h3>
+    <p>@_log</p>
+</fieldset>

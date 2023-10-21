@@ -180,7 +180,7 @@ public sealed class RolandSysex : Sysex
                 {
                     Device = legacyHeader.Device;
                     Type = legacyHeader.Type;
-                    IsKnownType = true
+                    IsKnownType = true;
                     return;
                 }
             }
