@@ -10,9 +10,6 @@ namespace Ahlzen.SysexSharp.SysexLib;
 /// </summary>
 public class CompositeSysex : Sysex
 {
-    // TODO: Should probably enforce Sysex data to be immutable everywhere
-
-
     protected List<Sysex> Sysexes { get; } = new();
 
     /// <summary>
@@ -22,8 +19,6 @@ public class CompositeSysex : Sysex
     /// <remarks>
     /// Data would be e.g. [f0 sysex1data f7 f0 sysex2data f7 f0 sysex3data f7]
     /// </remarks>
-    /// <param name="data"></param>
-    /// <exception cref="ArgumentException"></exception>
     public CompositeSysex(byte[] data) : base(data)
     {
         int sysexIndex = 0;
@@ -51,12 +46,11 @@ public class CompositeSysex : Sysex
         // that the last byte is end-of-sysex
     }
 
-
     public static CompositeSysex FromSysexes(IEnumerable<Sysex> sysexes)
     {
         var data = new List<byte>();
         foreach (Sysex sysex in sysexes)
-            data.AddRange(sysex.Data);
+            data.AddRange(sysex.GetData());
         return new CompositeSysex(data.ToArray());
     }
 }

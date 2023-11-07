@@ -89,7 +89,18 @@ public class DX7Voice : DXVoice, ICanParse
     public override string? Device => "DX7";
     public override string? Type => "Single voice";
 
+    public static new bool Test(byte[] data)
+    {
+        if (!Sysex.Test(data)) return false;
+        if (!ParsingUtils.MatchesPattern(data, DX7SingleVoiceHeader)) return false;
+        if (data.Length != TotalLength_Const) return false;
+        return true;
+    }
+
     internal DX7Voice(byte[] data) : base(data) { }
-    
-    internal DX7Voice(Dictionary<string,object> parameterValues) : base(parameterValues, TotalLength_Const) { }
+
+    internal DX7Voice(Dictionary<string, object> parameterValues)
+        : base(FromParameterValues(DX7SingleVoiceParameters,
+            parameterValues, TotalLength_Const, DX7SingleVoiceHeader))
+    { }
 }

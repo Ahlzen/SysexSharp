@@ -13,12 +13,12 @@ public static class ManufacturerData
     /// <exception cref="ArgumentException">
     /// Thrown if the specified data is not a valid sysex.
     /// </exception>
-    public static byte[] GetId(byte[] data)
+    public static byte[] GetId(IReadOnlyList<byte> data)
     {
         // Sanity checks
         if (data == null)
             throw new ArgumentNullException(nameof(data));
-        if (data.Length <= 3)
+        if (data.Count <= 3)
             throw new ArgumentException("Data is too short for a valid Sysex");
 
         // Manufacturer ID is 1 or 3 bytes following START_OF_SYSEX

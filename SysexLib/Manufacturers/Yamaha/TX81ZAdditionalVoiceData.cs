@@ -22,6 +22,8 @@ public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
         (byte)'9', (byte)'7', (byte)'6', (byte)'A', (byte)'E'
     };
 
+    protected const int ChecksumDataStartOffset = 6; // ASCII header is included in checksum
+
     private const int TotalLength_Const = 6 + 10 + 23 + 2;
 
     // Offsets are relative to the start of the Parameter Data section
@@ -51,7 +53,7 @@ public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
     #endregion
 
     protected override byte?[] Header => TX81ZAdditionalVoiceHeader;
-    protected override int ChecksumDataStartOffset => 6; // ASCII header is included in checksum
+    
     protected override int ParameterDataLength => 23;
     protected override List<Parameter> Parameters => TX81ZAdditionalVoiceParameters;
     protected override Dictionary<string, Parameter> ParametersByName => TX81ZAdditionalVoiceParametersByName;
@@ -60,8 +62,17 @@ public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
     public override string? Device => "TX81Z";
     public override string? Type => "Additional voice data";
 
+    public new static bool Test(byte[] data)
+    {
+        if (!Sysex.Test(data)) return false;
+        if (!ParsingUtils.MatchesPattern(data, TX81ZAdditionalVoiceHeader)) return false;
+        if (data.Length != TotalLength_Const) return false;
+        return true;
+    }
+
     internal TX81ZAdditionalVoiceData(byte[] data) : base(data) { }
 
-    internal TX81ZAdditionalVoiceData(Dictionary<string, object> parameterValues) :
-        base(parameterValues, TotalLength_Const) { }
+    internal TX81ZAdditionalVoiceData(Dictionary<string, object> parameterValues)
+        : base(FromParameterValues(TX81ZAdditionalVoiceParameters, parameterValues,
+            TotalLength_Const, TX81ZAdditionalVoiceHeader, ChecksumDataStartOffset)) { }
 }

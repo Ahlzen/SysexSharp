@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using Ahlzen.SysexSharp.SysexLib.Utils;
 
 namespace Ahlzen.SysexSharp.SysexLib;
 
 /// <summary>
-/// Base class for all types of Sysex.
+/// Immutable base class for all types of Sysex.
 /// </summary>
 /// <remarks>
 /// This class can be used directly for generic Sysex data, or used
@@ -16,11 +17,25 @@ namespace Ahlzen.SysexSharp.SysexLib;
 public class Sysex
 {
     /// <summary>
-    /// For all sysex types, Data contains the binary MIDI data
-    /// that can be sent to or received from a device,
+    /// Raw binary MIDI data that can be sent to or received from a device,
     /// including start and end-of-sysex markers.
     /// </summary>
-    public byte[] Data { get; }
+    protected byte[] _data;
+
+    /// <summary>
+    /// Number of bytes in Sysex data, including including start
+    /// and end-of-sysex markers
+    /// </summary>
+    public virtual int Length => _data.Length;
+
+    /// <summary>
+    /// Returns the raw sysex data.
+    /// </summary>
+    /// <remarks>
+    /// Always creates a copy of the data to ensure immutability
+    /// (never return a reference to our internal buffer)
+    /// </remarks>
+    public virtual byte[] GetData() => _data.Copy();
 
     /// <summary>
     /// The name of the sysex. This is usually set on parsing
@@ -28,14 +43,14 @@ public class Sysex
     /// individual patch), or otherwise may be the filename
     /// of the sysex file, or null if neither applies.
     /// </summary>
-    public virtual string? Name { get; }
+    public virtual string? Name { get; private set; }
 
     /// <summary>
     /// Manufacturer ID (1-3 bytes). Should be set for all known sysex types.
     /// E.g. [0x43] for Yamaha.
     /// </summary>
     public virtual byte[] ManufacturerId
-        => Manufacturers.ManufacturerData.GetId(Data);
+        => Manufacturers.ManufacturerData.GetId(_data);
 
     /// <summary>
     /// Name of manufacturer, if known, derived from Manufacturer ID.
@@ -57,27 +72,7 @@ public class Sysex
     /// </summary>
     public virtual string? Type => null;
 
-    /// <summary>
-    /// Number of bytes in Sysex data, including including start
-    /// and end-of-sysex markers
-    /// </summary>
-    public virtual int Length => Data.Length;
-
-    /// <summary>
-    /// True for all known sysex types. If true, you can expect
-    /// at least a ManufacturerName, Device and Type to be set.
-    /// May be false for unknown/generic sysex data.
-    /// </summary>
-    public virtual bool IsKnownType => !string.IsNullOrEmpty(Type);
-
-    /// <summary>
-    /// Internal constructor for an empty sysex, e.g. when building
-    /// a new Sysex from parameter data.
-    /// </summary>
-    internal Sysex(int length)
-    {
-        Data = new byte[length];
-    }
+    
 
     /// <param name="data">Raw binary data, including start/end-of-sysex bytes.</param>
     /// <param name="name">Filename, bank name etc, or null if not known/applicable.</param>
@@ -88,32 +83,33 @@ public class Sysex
     /// </remarks>
     internal Sysex(byte[] data, string? name = null, int? expectedLength = null)
     {
-        Debug.Assert(data != null);
-        Debug.Assert(data.Length >= 3);
+        Init(data, name, expectedLength);
+    }
 
-        // There may be more sysex markers if containing multiple
-        // sub-sections, but the first and last byte should be
-        // sysex markers.
-        Debug.Assert(data[0] == Constants.START_OF_SYSEX);
-        Debug.Assert(data[data.Length - 1] == Constants.END_OF_SYSEX);
+    internal Sysex(Func<byte[]> dataFactory, string? name = null, int? expectedLength = null)
+    {
+        byte[] data = dataFactory();
+        Init(data, name, expectedLength);
+    }
 
-        Data = data;
+    protected void Init(byte[] data, string? name = null, int? expectedLength = null)
+    {
+        SanityCheck(data);
+
+        if (expectedLength.HasValue && expectedLength != data.Length)
+            throw new ArgumentException(
+                $"Data was not of the expected length. Expected: {expectedLength}, actual: {data.Length}.",
+                nameof(data));
+
         Name = name;
 
-        if (expectedLength != null)
-        {
-            if (data.Length != expectedLength)
-            {
-                throw new ArgumentException(
-                    $"Data was not of the expected length. Expected: {expectedLength}, actual: {data.Length}.",
-                    nameof(data));
-            }
-        }
+        // Copy the provided data to ensure immutability
+        _data = data.Copy();
     }
 
     /// <summary>
     /// Tests the specified data for being a valid sysex.
-    /// Known sysex types implemente more specific tests to verify
+    /// Known sysex types implements more specific tests to verify
     /// that the data is of the specified type.
     /// </summary>
     /// <returns>True if the data appears to contain a valid sysex.</returns>
@@ -136,13 +132,25 @@ public class Sysex
     /// <exception cref="ArgumentException">Thrown if data is not valid.</exception>
     internal static void SanityCheck(byte[] data)
     {
-        if (data is null)
-            throw new ArgumentNullException(nameof(data), "Sysex has no data.");
-        if (data.Length <= 3)
-            throw new ArgumentException(nameof(data), "Not enough data for a valid sysex.");
+        if (data == null)
+            throw new ArgumentNullException(nameof(data),
+                "Sysex data is null.");
+
+        // There must be at least some data in addition to the sysex
+        // markers and manufacturer's byte(s). So minimum is 4 bytes, but realistically
+        // there should be more
+        if (data.Length < 4)
+            throw new ArgumentException(
+                $"Sysex data is too short ({data.Length} bytes)", nameof(data));
+
+        // There may be more sysex markers if containing multiple
+        // sub-sections, but the first and last byte should always be
+        // sysex markers.
         if (data[0] != Constants.START_OF_SYSEX)
-            throw new ArgumentException(nameof(data), "Start-of-sysex marker not found in data.");
-        if (data[data.Length - 1] != Constants.END_OF_SYSEX)
-            throw new ArgumentException(nameof(data), "End-of-sysex marker not found in data.");
+            throw new ArgumentException(
+                "Sysex data does not begin with start-of-sysex marker (f0)", nameof(data));
+        if (data[^1] != Constants.END_OF_SYSEX)
+            throw new ArgumentException(
+                "Sysex data does not end with end-of-sysex marker (f7)", nameof(data));
     }
 }

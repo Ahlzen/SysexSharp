@@ -1,6 +1,6 @@
-﻿using Ahlzen.SysexSharp.SysexLib.Parsing;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Ahlzen.SysexSharp.SysexLib.Parsing;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
@@ -94,8 +94,18 @@ public class TX81ZVoice : DXVoice, ICanParse
     public override string? Device => "TX81Z";
     public override string? Type => "Single voice";
 
+    public new static bool Test(byte[] data)
+    {
+        if (!Sysex.Test(data)) return false;
+        if (!ParsingUtils.MatchesPattern(data, TX81ZSingleVoiceHeader)) return false;
+        if (data.Length != TotalLength_Const) return false;
+        return true;
+    }
+
     internal TX81ZVoice(byte[] data) : base(data) { }
 
-    internal TX81ZVoice(Dictionary<string,object> parameterValues) :
-        base(parameterValues, TotalLength_Const) { }
+    internal TX81ZVoice(Dictionary<string, object> parameterValues)
+        : base(FromParameterValues(TX81ZSingleVoiceParameters,
+            parameterValues, TotalLength_Const, TX81ZSingleVoiceHeader))
+    { }
 }

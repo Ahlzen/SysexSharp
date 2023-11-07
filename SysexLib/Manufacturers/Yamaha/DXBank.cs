@@ -1,8 +1,8 @@
-﻿using Ahlzen.SysexSharp.SysexLib.Parsing;
-using Ahlzen.SysexSharp.SysexLib.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ahlzen.SysexSharp.SysexLib.Parsing;
+using Ahlzen.SysexSharp.SysexLib.Utils;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
@@ -33,13 +33,6 @@ public abstract class DXBank : Sysex, IHasItems
     protected abstract string? ItemNameParameter { get; } // name of the parameter that parses the item name, e.g. "Voice name", if applicable
 
 
-    /// <summary>
-    /// The offset at which the data used to calculate the checksum starts.
-    /// Usually (default) right after the header. Sometimes, e.g. for some TX81Z sysexes,
-    /// a fixed ASCII string before the parameter data is included in the checksum.
-    /// </summary>
-    protected virtual int ChecksumDataStartOffset => HeaderLength;
-
     internal DXBank(byte[] data, string? name) : base(data, name)
     {
         if (data.Length != TotalLength)
@@ -61,7 +54,7 @@ public abstract class DXBank : Sysex, IHasItems
     {
         if (ItemNameParameter != null)
             for (int i = 0; i < ItemCount; i++)
-                yield return (string) ParametersByName[ItemNameParameter]!.GetValue(Data, GetItemDataOffset(i));
+                yield return (string) ParametersByName[ItemNameParameter].GetValue(_data, GetItemDataOffset(i));
     }
 
     /// <see cref="IHasItems.GetItem"/>
@@ -72,7 +65,7 @@ public abstract class DXBank : Sysex, IHasItems
 
     public Dictionary<string,object> ItemToDictionary(int index) {
         int offset = GetItemDataOffset(index);
-        return Parameters.ToDictionary(p => p.Name, p => p.GetValue(Data, offset));
+        return Parameters.ToDictionary(p => p.Name, p => p.GetValue(_data, offset));
     }
 
     #endregion
@@ -90,7 +83,7 @@ public abstract class DXBank : Sysex, IHasItems
     /// Gets the parameter data for the specified item.
     /// </summary>
     protected byte[] GetItemData(int itemNumber)
-        => Data.SubArray(GetItemDataOffset(itemNumber), ItemSize);
+        => _data.SubArray(GetItemDataOffset(itemNumber), ItemSize);
 
     #endregion
 }

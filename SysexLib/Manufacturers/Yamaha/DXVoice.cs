@@ -1,9 +1,9 @@
-﻿using Ahlzen.SysexSharp.SysexLib.Parsing;
-using Ahlzen.SysexSharp.SysexLib.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Ahlzen.SysexSharp.SysexLib.Parsing;
+using Ahlzen.SysexSharp.SysexLib.Utils;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
@@ -22,12 +22,6 @@ public abstract class DXVoice : Sysex, ICanParse
     protected abstract Dictionary<string, Parameter> ParametersByName { get; }
     protected abstract string? VoiceNameParameter { get; } // name of the parameter that parses the voice name, e.g. "Voice name", if applicable
     
-    /// <summary>
-    /// The offset at which the data used to calculate the checksum starts.
-    /// Usually (default) right after the header. Sometimes, e.g. for some TX81Z sysexes,
-    /// a fixed ASCII string before the parameter data is included in the checksum.
-    /// </summary>
-    protected virtual int ChecksumDataStartOffset => HeaderLength;
 
     /// <summary>
     /// Constructor from existing data.
@@ -43,26 +37,32 @@ public abstract class DXVoice : Sysex, ICanParse
     }
 
     /// <summary>
-    /// Constructor from parameter values. Must include all names/values exactly.
+    /// Builds DXVoice data from parameter values.
     /// </summary>
-    /// <param name="totalLength">
-    /// Total number of bytes in sysex data.
+    /// <param name="checksumDataOffset">
+    /// Optional. Defaults to the length of the header, but may need to be specified
+    /// explicitly. Sometimes (as with certain TX81Z sysex types, part of the header
+    /// is also checksummed).
     /// </param>
-    /// <exception cref="ArgumentException">
-    /// Thrown is a parameter value is missing.
-    /// </exception>
-    internal DXVoice(Dictionary<string,object> parameterValues, int totalLength) : base(totalLength)
+    protected static byte[] FromParameterValues(
+        IEnumerable<Parameter> parameters,
+        Dictionary<string, object> parameterValues,
+        int totalLength,
+        byte?[] header,
+        int? checksumDataOffset = null)
     {
-        Header.CopyNonNullTo(Data);
-        foreach (Parameter parameter in Parameters)
+        byte[] data = new byte[totalLength];
+        header.CopyNonNullTo(data);
+        foreach (Parameter parameter in parameters)
         {
             if (!parameterValues.ContainsKey(parameter.Name))
                 throw new ArgumentException($"Value for parameter \"{parameter.Name}\" not found", nameof(parameterValues));
             object parameterValue = parameterValues[parameter.Name];
-            parameter.SetValue(Data, parameterValue, HeaderLength);
+            parameter.SetValue(data, parameterValue, header.Length);
         }
-        UpdateChecksum();
-        Data[Data.Length - 1] = Constants.END_OF_SYSEX;
+        SetChecksum(data, checksumDataOffset ?? header.Length);
+        data[^1] = Constants.END_OF_SYSEX;
+        return data;
     }
 
     public abstract override string? Device { get; }
@@ -71,32 +71,38 @@ public abstract class DXVoice : Sysex, ICanParse
 
     public override string? Name =>
         VoiceNameParameter == null ? null :
-        ParametersByName[VoiceNameParameter].GetValue(Data, HeaderLength) as string;
+        ParametersByName[VoiceNameParameter].GetValue(_data, HeaderLength) as string;
 
     #region ICanParse
 
-    public IEnumerable<string> ParameterNames =>
-        Parameters.Select(p => p.Name);
+    public IEnumerable<string> ParameterNames
+        => Parameters.Select(p => p.Name);
 
-    public object GetParameterValue(string parameterName) =>
-        ParametersByName[parameterName].GetValue(Data, HeaderLength);
+    public object GetParameterValue(string parameterName)
+        => ParametersByName[parameterName].GetValue(_data, HeaderLength);
 
     public void Validate()
-    {
-        Parameters.ForEach(p => p.Validate(Data, HeaderLength));
-    }
+        => Parameters.ForEach(p => p.Validate(_data, HeaderLength));
 
     public Dictionary<string, object> ToDictionary()
-        => Parameters.ToDictionary(p => p.Name, p => p.GetValue(Data, HeaderLength));
+        => Parameters.ToDictionary(p => p.Name, p => p.GetValue(_data, HeaderLength));
 
     public string ToJSON() => JsonSerializer.Serialize(
         ToDictionary(), new JsonSerializerOptions { WriteIndented = true });
 
-    internal void UpdateChecksum()
+    /// <summary>
+    /// Updates the checksum byte in the specified sysex data.
+    /// </summary>
+    /// <param name="checksumDataOffset">
+    /// Usually the length of the header, but sometimes (like with certain
+    /// TX81Z sysex types, part of the header is also checksummed).
+    /// </param>
+    protected static void SetChecksum(byte[] data, int checksumDataOffset)
     {
-        byte[] checksumData = Data.SubArray(ChecksumDataStartOffset, TotalLength-ChecksumDataStartOffset-2);
+        int checksumDataLength = data.Length - checksumDataOffset - 2;
+        byte[] checksumData = data.SubArray(checksumDataOffset, checksumDataLength);
         byte checksum = Checksum.GetTwoComplement7Bit(checksumData);
-        Data[TotalLength-2] = checksum;
+        data[^2] = checksum; // checksum is second last byte
     }
 
     #endregion

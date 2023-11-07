@@ -13,8 +13,6 @@ public interface IHasItems
     /// <summary>
     /// Returns the total number of items in this sysex.
     /// </summary>
-    /// <returns></returns>
-    //public int GetSubItemCount();
     public int ItemCount { get; }
 
     /// <summary>

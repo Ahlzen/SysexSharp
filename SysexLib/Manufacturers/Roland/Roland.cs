@@ -160,7 +160,6 @@ public sealed class RolandSysex : Sysex
 
     public new string? Device { get; set; }
     public new string? Type { get; set; }
-    public new bool IsKnownType { get; set; }
 
     public RolandSysex(byte[] data, string? name = null, int? expectedLength = null)
         : base(data, name, expectedLength)
@@ -180,7 +179,6 @@ public sealed class RolandSysex : Sysex
                 {
                     Device = legacyHeader.Device;
                     Type = legacyHeader.Type;
-                    IsKnownType = true;
                     return;
                 }
             }

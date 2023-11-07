@@ -35,7 +35,7 @@ public class DX7ParameterChange : Sysex
     /// sysex. Should be either 0 (voice) or 2 (function).
     /// </summary>
     /// <returns></returns>
-    public int Group => GetGroup(Data);
+    public int Group => GetGroup(_data);
 
     /// <see cref="Sysex.Test"/>
     public new static bool Test(byte[] data)

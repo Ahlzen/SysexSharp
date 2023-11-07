@@ -12,17 +12,15 @@ public class BehringerSysex : Sysex
         { new byte?[] { 0xf0, 0x00, 0x20, 0x32, 0x00, 0x01, 0x24, 0x00 }, "Pro-800" }
     };
 
-    public new string? Device { get; set; }
-    public new string? Type { get; set; }
-    public new bool IsKnownType { get; set; }
+    public new string? Device { get; protected set; }
+    public new string? Type { get; protected set; }
 
     public BehringerSysex(byte[] data, string? name = null, int? expectedLength = null)
         : base(data, name, expectedLength)
     {
         // Sanity checks
-        SanityCheck(data);
         if (ManufacturerName != "Behringer")
-            throw new ArgumentException("Data does not contain a valid Behringer sysex", nameof(data));
+            throw new ArgumentException("Data is not a valid Behringer sysex", nameof(data));
 
         foreach (KeyValuePair<byte?[], string> header in BehringerHeaders)
         {

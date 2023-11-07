@@ -4,7 +4,7 @@ namespace Ahlzen.SysexSharp.SysexLib;
 
 /// <summary>
 /// Indicates that the type of Sysex can be parsed
-/// into known invidual parameter values.
+/// into known individual parameter values.
 /// </summary>
 internal interface ICanParse
 {
