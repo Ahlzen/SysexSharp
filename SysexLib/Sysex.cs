@@ -50,14 +50,14 @@ public class Sysex
     /// E.g. [0x43] for Yamaha.
     /// </summary>
     public virtual byte[] ManufacturerId
-        => Manufacturers.ManufacturerData.GetId(_data);
+        => Manufacturers.Manufacturers.GetId(_data);
 
     /// <summary>
     /// Name of manufacturer, if known, derived from Manufacturer ID.
     /// E.g. "Yamaha".
     /// </summary>
     public virtual string? ManufacturerName
-        => Manufacturers.ManufacturerData.GetName(ManufacturerId);
+        => Manufacturers.Manufacturers.GetName(ManufacturerId);
 
     /// <summary>
     /// Name of the device this sysex type is for, if known.

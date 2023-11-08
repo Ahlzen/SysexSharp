@@ -17,8 +17,8 @@ public static class SysexFactory
     public static Sysex Create(byte[] data, string? filename = null)
     {
         Sysex.SanityCheck(data);
-        byte[] manufacturerId = Manufacturers.ManufacturerData.GetId(data);
-        string? manufacturerName = Manufacturers.ManufacturerData.GetName(manufacturerId);
+        byte[] manufacturerId = Manufacturers.Manufacturers.GetId(data);
+        string? manufacturerName = Manufacturers.Manufacturers.GetName(manufacturerId);
 
         switch (manufacturerName)
         {

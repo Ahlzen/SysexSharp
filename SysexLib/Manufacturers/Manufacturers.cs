@@ -1,11 +1,25 @@
-﻿using Ahlzen.SysexSharp.SysexLib.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
+using Ahlzen.SysexSharp.SysexLib.Utils;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers;
 
-public static class ManufacturerData
+public static class Manufacturers
 {
+    private static IList<Manufacturer> _manufacturers;
+    private static readonly Dictionary<byte[], Manufacturer> _manufacturersById;
+
+    static Manufacturers()
+    {
+        string json = EmbeddedResourceHelper.GetAsText("manufacturers.json");
+        _manufacturers = JsonConvert.DeserializeObject<Manufacturer[]>(json);
+        _manufacturersById = new Dictionary<byte[], Manufacturer>(
+            _manufacturers.Select(m => new KeyValuePair<byte[], Manufacturer>(m.Id, m)),
+            new ByteArrayComparer());
+    }
+
     /// <summary>
     /// Returns the manufacturer ID bytes for the
     /// given sysex.
@@ -41,9 +55,15 @@ public static class ManufacturerData
             throw new ArgumentException("ID is not the correct number of bytes");
 
         // Look up in index
-        return _manufacturers.GetValueOrDefault(id);
+        return _manufacturersById.GetValueOrDefault(id)?.Name;
     }
 
+    
+
+
+
+
+    /*
     /// <summary>
     /// Dictionary of Manufacturer ID -> Name
     /// </summary>
@@ -615,6 +635,7 @@ public static class ManufacturerData
             { new byte[]{0x00, 0x21, 0x2E}, "C. Bechstein Digital GmbH"},
             { new byte[]{0x00, 0x21, 0x2F}, "Motas Electronics Ltd"}
         };
+    */
 }
 
 
