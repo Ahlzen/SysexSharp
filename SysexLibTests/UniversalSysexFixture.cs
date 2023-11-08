@@ -36,17 +36,17 @@ public class UniversalSysexFixture
     {
         Sysex dumpRequest = SysexFactory.Create(SampleDumpRequest);
         Assert.IsInstanceOf<UniversalSysex>(dumpRequest);
-        Assert.AreEqual("MIDI", dumpRequest.ManufacturerName);
+        Assert.IsNull(dumpRequest.ManufacturerName);
         Assert.AreEqual("Sample Dump Request", dumpRequest.Type);
 
         Sysex sampleDataPacket = SysexFactory.Create(SampleDataPacket);
         Assert.IsInstanceOf<UniversalSysex>(sampleDataPacket);
-        Assert.AreEqual("MIDI", sampleDataPacket.ManufacturerName);
+        Assert.IsNull(sampleDataPacket.ManufacturerName);
         Assert.AreEqual("Sample Data Packet", sampleDataPacket.Type);
         
         Sysex sampleDataACK = SysexFactory.Create(SampleDataACK);
         Assert.IsInstanceOf<UniversalSysex>(sampleDataACK);
-        Assert.AreEqual("MIDI", sampleDataACK.ManufacturerName);
+        Assert.IsNull(sampleDataACK.ManufacturerName);
         Assert.AreEqual("ACK", sampleDataACK.Type);
     }
 

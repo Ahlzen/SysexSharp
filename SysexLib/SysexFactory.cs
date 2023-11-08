@@ -20,10 +20,16 @@ public static class SysexFactory
         byte[] manufacturerId = Manufacturers.Manufacturers.GetId(data);
         string? manufacturerName = Manufacturers.Manufacturers.GetName(manufacturerId);
 
+        // Special case: Universal messages have no Manufacturer
+
+        if (manufacturerId[0] == 0x7e // non-realtime universal message
+            || manufacturerId[0] == 0x7f) // realtime unversal message
+        {
+            return new UniversalSysex(data);
+        }
+
         switch (manufacturerName)
         {
-            case "MIDI": // Universal sysex types
-                return new UniversalSysex(data);
             case "Roland":
                 return new RolandSysex(data, filename);
             case "Yamaha":
