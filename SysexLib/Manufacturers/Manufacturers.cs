@@ -13,7 +13,7 @@ public static class Manufacturers
 
     static Manufacturers()
     {
-        string json = EmbeddedResourceHelper.GetAsText("manufacturers.json");
+        string json = EmbeddedResourceHelper.GetAsText("manufacturers.json5");
         _manufacturers = JsonConvert.DeserializeObject<Manufacturer[]>(json);
         _manufacturersById = new Dictionary<byte[], Manufacturer>(
             _manufacturers.Select(m => new KeyValuePair<byte[], Manufacturer>(m.Id, m)),

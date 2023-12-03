@@ -9,6 +9,11 @@
 
   <ItemGroup>
     <None Remove="Data\manufacturers.json" />
+    <None Remove="Data\manufacturers.json5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\manufacturers.json5" />
   </ItemGroup>
 
   <ItemGroup>

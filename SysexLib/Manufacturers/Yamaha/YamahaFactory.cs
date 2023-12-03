@@ -13,6 +13,8 @@ internal static class YamahaFactory
             return new DX7ParameterChange(data);
 
         // TX81Z
+        if (TX81ZVoiceBank.Test(data))
+            return new TX81ZVoiceBank(data);
         if (TX81ZVoice.Test(data))
             return new TX81ZVoice(data);
         if (TX81ZAdditionalVoiceData.Test(data))
