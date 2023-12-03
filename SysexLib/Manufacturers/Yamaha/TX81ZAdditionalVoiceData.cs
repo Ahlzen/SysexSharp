@@ -5,10 +5,10 @@ using System.Linq;
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
 /// <summary>
-/// TX81Z Additional data for single voice (SCED) dump.
+/// TX81Z Additional data for single voice dump (ACED/VCED).
 /// </summary>
 /// <remarks>
-/// This is typically recieved/transmitted together with a TX81ZVoice sysex.
+/// This is typically recieved/transmitted together with a TX81ZVoice (VCED) sysex.
 /// </remarks>
 public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
 {
@@ -54,7 +54,7 @@ public class TX81ZAdditionalVoiceData : DXVoice, ICanParse
 
     protected override byte?[] Header => TX81ZAdditionalVoiceHeader;
     
-    protected override int ParameterDataLength => 23;
+    protected override int ParameterDataLength => 23; // does not include static part of heading
     protected override List<Parameter> Parameters => TX81ZAdditionalVoiceParameters;
     protected override Dictionary<string, Parameter> ParametersByName => TX81ZAdditionalVoiceParametersByName;
     protected override string? VoiceNameParameter => null;

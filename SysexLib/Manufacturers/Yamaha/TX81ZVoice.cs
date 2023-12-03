@@ -5,12 +5,10 @@ using Ahlzen.SysexSharp.SysexLib.Parsing;
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
 /// <summary>
-/// TX81Z One-voice data (VCED) dump.
+/// TX81Z/DX21/DX27/DX100 One-voice data (VCED) dump.
 /// </summary>
 /// <remarks>
-/// TODO: These parameters seem to be common to the
-/// TX81Z, DX21, DX27 and DX100. Additional parameters
-/// for the TX81Z are transmitted in a separate sysex
+/// Additional parameters for the TX81Z are transmitted in a separate sysex
 /// (TX81ZAdditionalVoiceData)
 /// </remarks>
 public class TX81ZVoice : DXVoice, ICanParse
