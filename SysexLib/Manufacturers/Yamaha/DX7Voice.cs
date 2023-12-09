@@ -80,7 +80,8 @@ public class DX7Voice : DXVoice, ICanParse
 
     #endregion
 
-    protected override byte?[] Header => DX7SingleVoiceHeader;
+    internal override byte?[] Header => DX7SingleVoiceHeader;
+
     protected override int ParameterDataLength => 155;
     protected override List<Parameter> Parameters => DX7SingleVoiceParameters;
     protected override Dictionary<string, Parameter> ParametersByName => DX7SingleVoiceParametersByName;

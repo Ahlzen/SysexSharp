@@ -14,8 +14,8 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 /// </summary>
 public abstract class DXVoice : Sysex, ICanParse
 {
-    protected abstract byte?[] Header { get; }
-    protected virtual int HeaderLength => Header.Length;
+    internal abstract byte?[] Header { get; }
+    internal virtual int HeaderLength => Header.Length;
     protected abstract int ParameterDataLength { get; }
     protected virtual int TotalLength => HeaderLength + ParameterDataLength + 2; // last 2 bytes are checksum + end-of-exclusive
     protected abstract List<Parameter> Parameters { get; }

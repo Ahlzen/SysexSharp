@@ -10,16 +10,21 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
     /// </summary>
     /// <remarks>
     /// This includes both VCED (DX21/27/100) parameters and the additional
-    /// ACED (TX81Z-specfiic) parameter data.
+    /// ACED (TX81Z-specific) parameter data.
     /// </remarks>
     internal class TX81ZVoiceBank : DXBank
     {
+        // This is the correct header according to the TX81Z manual
         internal static readonly byte?[] BankDataHeader = {
             0xf0, 0x43, null, 0x04, 0x10, 0x00 };
 
+        // This is what I seem to come across in the wild...
+        internal static readonly byte?[] BankDataHeader_Alt = {
+            0xf0, 0x43, null, 0x04, 0x20, 0x00 };
+
         internal const int PackedVoiceDataSize = 128;
 
-        internal const int BankDataSize = 6 + 32 * PackedVoiceDataSize + 2;
+        internal const int BankDataSize = 6 + 32 * PackedVoiceDataSize + 2; // 4104 bytes
 
         #region Parameters
 
@@ -118,13 +123,15 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         public new static bool Test(byte[] data)
         {
             if (!Sysex.Test(data)) return false;
-            if (!ParsingUtils.MatchesPattern(data, BankDataHeader)) return false;
+            if (!(ParsingUtils.MatchesPattern(data, BankDataHeader) ||
+                ParsingUtils.MatchesPattern(data, BankDataHeader_Alt)))
+                return false;
             if (data.Length != BankDataSize) return false;
             return true;
         }
 
         public override Sysex GetItem(int index)
-            => new TX81ZVoice(ItemToDictionary(index)); // TODO: Change TX81ZVoice to incude DX21+Extended data!
+            => new DX21Voice(ItemToDictionary(index)); // TODO: Change TX81ZVoice to incude DX21+Extended data!
 
         public override void SetItem(int index, Sysex sysex)
         {

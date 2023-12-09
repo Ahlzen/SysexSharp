@@ -26,10 +26,10 @@ public interface IHasItems
     /// </summary>
     public Sysex GetItem(int index);
 
-    /// <summary>
-    /// Updates the specified item in the current sysex. For example,
-    /// sets a particular patch in a bank (useful for assembling
-    /// custom patch banks). Supplied sysex must be the appropriate type.
-    /// </summary>
-    public void SetItem(int index, Sysex sysex);
+    ///// <summary>
+    ///// Updates the specified item in the current sysex. For example,
+    ///// sets a particular patch in a bank (useful for assembling
+    ///// custom patch banks). Supplied sysex must be the appropriate type.
+    ///// </summary>
+    //public void SetItem(int index, Sysex sysex);
 }

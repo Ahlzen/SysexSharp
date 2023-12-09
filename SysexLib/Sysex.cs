@@ -113,10 +113,10 @@ public class Sysex
     /// that the data is of the specified type.
     /// </summary>
     /// <returns>True if the data appears to contain a valid sysex.</returns>
-    public static bool Test(byte[] data)
+    public static bool Test(byte[] data, int offset = 0)
     {
         try {
-            Sysex.SanityCheck(data);
+            Sysex.SanityCheck(data, offset);
         }
         catch (ArgumentException) {
             return false;
@@ -130,7 +130,7 @@ public class Sysex
     /// valid sysex.
     /// </summary>
     /// <exception cref="ArgumentException">Thrown if data is not valid.</exception>
-    internal static void SanityCheck(byte[] data)
+    internal static void SanityCheck(byte[] data, int offset = 0)
     {
         if (data == null)
             throw new ArgumentNullException(nameof(data),
@@ -139,7 +139,7 @@ public class Sysex
         // There must be at least some data in addition to the sysex
         // markers and manufacturer's byte(s). So minimum is 4 bytes, but realistically
         // there should be more
-        if (data.Length < 4)
+        if (data.Length+offset < 4)
             throw new ArgumentException(
                 $"Sysex data is too short ({data.Length} bytes)", nameof(data));
 
@@ -149,8 +149,15 @@ public class Sysex
         if (data[0] != Constants.START_OF_SYSEX)
             throw new ArgumentException(
                 "Sysex data does not begin with start-of-sysex marker (f0)", nameof(data));
+        
         if (data[^1] != Constants.END_OF_SYSEX)
             throw new ArgumentException(
                 "Sysex data does not end with end-of-sysex marker (f7)", nameof(data));
+
+        // This check really only applies if offset != 0, in which cases that
+        // byte should _also_ be START_OF_SYSEX.
+        if (data[offset] != Constants.START_OF_SYSEX)
+            throw new ArgumentException(
+                "Sysex data does not begin with start-of-sysex marker (f0)", nameof(data));
     }
 }

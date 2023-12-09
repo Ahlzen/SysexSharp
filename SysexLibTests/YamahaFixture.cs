@@ -1,6 +1,7 @@
 ﻿using Ahlzen.SysexSharp.SysexLib;
 using Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 using NUnit.Framework;
+using System;
 
 namespace Ahlzen.SysexSharp.SysexLibTests;
 
@@ -45,12 +46,30 @@ public class YamahaFixture : BaseFixture
     ///// TX81Z
 
     [Test]
+    public void TestParseTX81ZVoice()
+    {
+        Sysex sysex = LoadFile("Yamaha TX81Z FilterBass.syx");
+
+        // TX81Z voice consists of DX21 Voice Data + TX81Z Additional Voice Data
+        Assert.IsTrue(sysex is CompositeSysex);
+        Assert.IsTrue(sysex is TX81ZVoice);
+        Assert.IsTrue(((TX81ZVoice)sysex).GetItem(0) is TX81ZAdditionalVoiceData);
+        Assert.IsTrue(((TX81ZVoice)sysex).GetItem(1) is DX21Voice);
+        Assert.AreEqual("Yamaha", sysex!.ManufacturerName);
+        Assert.AreEqual("TX81Z", sysex!.Device);
+        Assert.AreEqual("Single voice", sysex!.Type);
+        Assert.AreEqual("FilterBass", sysex!.Name);
+    }
+
+    [Test]
     public void TestParseTX81ZBank()
     {
         Sysex sysex = LoadFile("Yamaha TX81Z 01A.syx");
 
         Assert.AreEqual("Yamaha", sysex.ManufacturerName);
         Assert.AreEqual("TX81Z", sysex.Device);
+        Assert.IsTrue(sysex is IHasItems);
+        Assert.AreEqual(32, ((IHasItems)sysex).ItemCount);
 
         // TODO: add more tests when banks are fully supported
     }
