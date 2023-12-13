@@ -12,7 +12,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
     /// This includes both VCED (DX21/27/100) parameters and the additional
     /// ACED (TX81Z-specific) parameter data.
     /// </remarks>
-    internal class TX81ZVoiceBank : DXBank
+    public class TX81ZVoiceBank : DXBank
     {
         // This is the correct header according to the TX81Z manual
         internal static readonly byte?[] BankDataHeader = {
@@ -131,7 +131,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         }
 
         public override Sysex GetItem(int index)
-            => new DX21Voice(ItemToDictionary(index)); // TODO: Change TX81ZVoice to incude DX21+Extended data!
+            => new TX81ZVoice(ItemToDictionary(index));
 
         public override void SetItem(int index, Sysex sysex)
         {

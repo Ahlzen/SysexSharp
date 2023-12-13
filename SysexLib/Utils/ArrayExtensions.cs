@@ -44,4 +44,15 @@ public static class ArrayExtensions
             if (source[i] != null)
                 dest[i + offset] = source[i]!.Value;
     }
+
+    /// <summary>
+    /// Appends array2 after array1 and returns the result.
+    /// </summary>
+    public static T[] Append<T>(this T?[] array1, T[] array2)
+    {
+        var result = new T[array1.Length + array2.Length];
+        Array.Copy(array1, result, array1.Length);
+        Array.Copy(array2, 0, result, array1.Length, array2.Length);
+        return result;
+    }
 }

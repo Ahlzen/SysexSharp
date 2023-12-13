@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ahlzen.SysexSharp.SysexLib.Parsing;
+using Ahlzen.SysexSharp.SysexLib.Utils;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 {
@@ -9,12 +10,18 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         public TX81ZVoice(byte[] data) : base(data)
         {
             if (ItemCount != 2)
-                throw new ArgumentException("Data is not a TX81ZVoice: Should contain two sysex messages (DX21Voice + TX81Z Additional data).");
+                throw new ArgumentException(
+                    "Data is not a TX81ZVoice: Should contain two sysex messages (DX21Voice + TX81Z Additional data).");
             if (GetItem(0) is not TX81ZAdditionalVoiceData)
-                throw new ArgumentException("Data is not a TX81ZVoice: Second contained sysex should be TX81ZAdditionalData.");
+                throw new ArgumentException(
+                    "Data is not a TX81ZVoice: Second contained sysex should be TX81ZAdditionalData.");
             if (GetItem(1) is not DX21Voice)
                 throw new ArgumentException("Data is not a TX81ZVoice: First contained sysex should be DX21Voice.");
         }
+
+        public TX81ZVoice(Dictionary<string, object> parameterValues)
+            : this(FromParameterValues(parameterValues))
+        { }
 
         public override string? Device => "TX81Z";
         public override string? Type => "Single voice";
@@ -43,6 +50,15 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
             if (compositeSysex.GetItem(1) is not DX21Voice) return false;
 
             return true;
+        }
+
+        public static byte[] FromParameterValues(
+            Dictionary<string, object> parameterValues)
+        {
+            var tx81zAdditionalData = new TX81ZAdditionalVoiceData(parameterValues);
+            var dx21voice = new DX21Voice(parameterValues);
+            return tx81zAdditionalData.GetData()
+                .Append(dx21voice.GetData());
         }
     }
 }

@@ -65,12 +65,20 @@ public class YamahaFixture : BaseFixture
     public void TestParseTX81ZBank()
     {
         Sysex sysex = LoadFile("Yamaha TX81Z 01A.syx");
-
         Assert.AreEqual("Yamaha", sysex.ManufacturerName);
         Assert.AreEqual("TX81Z", sysex.Device);
-        Assert.IsTrue(sysex is IHasItems);
-        Assert.AreEqual(32, ((IHasItems)sysex).ItemCount);
+        Assert.IsInstanceOf<TX81ZVoiceBank>(sysex);
 
-        // TODO: add more tests when banks are fully supported
+        TX81ZVoiceBank bank = (TX81ZVoiceBank)sysex;
+        Assert.AreEqual(32, bank.ItemCount);
+
+        // Extract single-voice sysex
+
+        TX81ZVoice? voice = bank.GetItem(3) as TX81ZVoice;
+        Assert.IsNotNull(voice);
+        Assert.AreEqual("Yamaha", voice!.ManufacturerName);
+        Assert.AreEqual("TX81Z", voice!.Device);
+        Assert.AreEqual("Single voice", voice!.Type);
+        Assert.AreEqual("<<Bass.1>>", voice!.Name);
     }
 }

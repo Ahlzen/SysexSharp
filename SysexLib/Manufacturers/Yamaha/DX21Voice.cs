@@ -54,8 +54,11 @@ public class DX21Voice : DXVoice, ICanParse
         DX21SingleVoiceParameters.Add(new NumericParameter(75, "Breath Control Pitch Bias", 0, 99)); // Center = 50
         DX21SingleVoiceParameters.Add(new NumericParameter(76, "Breath Control EG Bias", 0, 99));
         DX21SingleVoiceParameters.Add(new AsciiParameter(77, "Voice name", 10));
-        // Parameter (bytes) 87-92 are not used
-        DX21SingleVoiceParameters.Add(new NumericParameter(93, "Operator 4-1 On/Off", 0, 15));
+        
+        // Parameters (bytes) 87-92 are not used with TX81Z
+        // TODO: Add parameters for DX21/DX27/DX100
+
+        //DX21SingleVoiceParameters.Add(new NumericParameter(93, "Operator 4-1 On/Off", 0, 15));
 
         // OP 1-4 parameters
         for (int op = 0; op < 4; op++)
