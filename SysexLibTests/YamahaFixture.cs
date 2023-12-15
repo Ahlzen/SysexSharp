@@ -24,7 +24,6 @@ public class YamahaFixture : BaseFixture
         Assert.AreEqual(32, bank.ItemCount);
 
         // List voice names
-
         List<string>? voiceNames = bank.GetItemNames()?.ToList();
         Assert.IsNotNull(voiceNames);
         Assert.AreEqual(32, voiceNames!.Count);
@@ -33,13 +32,45 @@ public class YamahaFixture : BaseFixture
         Assert.AreEqual("TUB BELLS", voiceNames![25]);
 
         // Extract single-voice sysex
-
         DX7Voice? voice = bank.GetItem(25) as DX7Voice;
         Assert.IsNotNull(voice);
         Assert.AreEqual("Yamaha", voice!.ManufacturerName);
         Assert.AreEqual("DX7", voice!.Device);
         Assert.AreEqual("Single voice", voice!.Type);
         Assert.AreEqual("TUB BELLS", voice!.Name);
+    }
+
+
+    ///// DX21/DX27/DX100
+
+    [Test]
+    public void TestParseDX21Bank()
+    {
+        Sysex sysex = LoadFile("Yamaha DX21 Presets 1.syx");
+
+        Assert.AreEqual("Yamaha", sysex.ManufacturerName);
+        Assert.AreEqual("DX21/DX27/DX100", sysex.Device);
+        Assert.AreEqual("32-voice bank", sysex.Type);
+        Assert.IsInstanceOf<DX21Bank>(sysex);
+
+        DX21Bank bank = (DX21Bank)sysex;
+        Assert.AreEqual(32, bank.ItemCount);
+
+        // List voice names
+        List<string>? voiceNames = bank.GetItemNames()?.ToList();
+        Assert.IsNotNull(voiceNames);
+        Assert.AreEqual(32, voiceNames!.Count);
+        Assert.AreEqual("Deep Grand", voiceNames![0]);
+        Assert.AreEqual("Uprt Piano", voiceNames![1]);
+        Assert.AreEqual("HonkeyTonk", voiceNames![2]);
+
+        // Extract single-voice sysex
+        DX21Voice? voice = bank.GetItem(2) as DX21Voice;
+        Assert.IsNotNull(voice);
+        Assert.AreEqual("Yamaha", voice!.ManufacturerName);
+        Assert.AreEqual("DX21/DX27/DX100", voice!.Device);
+        Assert.AreEqual("Single voice", voice!.Type);
+        Assert.AreEqual("HonkeyTonk", voice!.Name);
     }
 
 
@@ -73,7 +104,6 @@ public class YamahaFixture : BaseFixture
         Assert.AreEqual(32, bank.ItemCount);
 
         // Extract single-voice sysex
-
         TX81ZVoice? voice = bank.GetItem(3) as TX81ZVoice;
         Assert.IsNotNull(voice);
         Assert.AreEqual("Yamaha", voice!.ManufacturerName);

@@ -19,6 +19,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
             0xf0, 0x43, null, 0x04, 0x10, 0x00 };
 
         // This is what I seem to come across in the wild...
+        // UPDATE: That appears to be a DX21 Voice Bank (non-packed format)
         internal static readonly byte?[] BankDataHeader_Alt = {
             0xf0, 0x43, null, 0x04, 0x20, 0x00 };
 

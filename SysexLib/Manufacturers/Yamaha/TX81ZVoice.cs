@@ -7,6 +7,20 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 {
     public class TX81ZVoice : CompositeSysex
     {
+        /// <summary>
+        /// These parameters are specific to DX21/DX27/DX100, and are
+        /// not included in TX81Z data, so they need to be added
+        /// (with blank values) during conversion.
+        /// </summary>
+        private static string[] DX21OnlyParameters = new[] {
+            "Pitch EG Rate 1",
+            "Pitch EG Rate 2",
+            "Pitch EG Rate 3",
+            "Pitch EG Level 1",
+            "Pitch EG Level 2",
+            "Pitch EG Level 3",
+        };
+
         public TX81ZVoice(byte[] data) : base(data)
         {
             if (ItemCount != 2)
@@ -55,10 +69,15 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         public static byte[] FromParameterValues(
             Dictionary<string, object> parameterValues)
         {
-            var tx81zAdditionalData = new TX81ZAdditionalVoiceData(parameterValues);
-            var dx21voice = new DX21Voice(parameterValues);
-            return tx81zAdditionalData.GetData()
-                .Append(dx21voice.GetData());
+            // Add DX21-specific parameters (not used, but must be supplied)
+            var dx21ParameterValues = new Dictionary<string, object>(parameterValues);
+            foreach (string dx21OnlyParameter in DX21OnlyParameters)
+                dx21ParameterValues.Add(dx21OnlyParameter, 0);
+
+            var tx81ZAdditionalData = new TX81ZAdditionalVoiceData(parameterValues);
+            var dx21Voice = new DX21Voice(dx21ParameterValues);
+            return tx81ZAdditionalData.GetData()
+                .Append(dx21Voice.GetData());
         }
     }
 }
