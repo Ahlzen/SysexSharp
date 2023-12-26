@@ -7,20 +7,6 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 {
     public class TX81ZVoice : CompositeSysex
     {
-        /// <summary>
-        /// These parameters are specific to DX21/DX27/DX100, and are
-        /// not included in TX81Z data, so they need to be added
-        /// (with blank values) during conversion.
-        /// </summary>
-        private static string[] DX21OnlyParameters = new[] {
-            "Pitch EG Rate 1",
-            "Pitch EG Rate 2",
-            "Pitch EG Rate 3",
-            "Pitch EG Level 1",
-            "Pitch EG Level 2",
-            "Pitch EG Level 3",
-        };
-
         public TX81ZVoice(byte[] data) : base(data)
         {
             if (ItemCount != 2)
@@ -52,11 +38,11 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 
             // 1st sysex: TX81Z Additional Voice Data
             if (!ParsingUtils.MatchesPattern(data,
-               TX81ZAdditionalVoiceData.TX81ZAdditionalVoiceHeader, offsets[0])) return false;
+               DXData.TX81ZAdditionalVoiceDataHeader, offsets[0])) return false;
 
             // 2nd sysex: DX21 Single Voice Data
             if (!ParsingUtils.MatchesPattern(data,
-               DX21Voice.DX21SingleVoiceHeader, offsets[1])) return false;
+               DXData.DX21SingleVoiceHeader, offsets[1])) return false;
 
             var compositeSysex = new CompositeSysex(data);
             if (compositeSysex.ItemCount != 2) return false;
@@ -71,8 +57,8 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         {
             // Add DX21-specific parameters (not used, but must be supplied)
             var dx21ParameterValues = new Dictionary<string, object>(parameterValues);
-            foreach (string dx21OnlyParameter in DX21OnlyParameters)
-                dx21ParameterValues.Add(dx21OnlyParameter, 0);
+            foreach (Parameter dx21OnlyParameter in DXData.DX21OnlyVoiceParameters)
+                dx21ParameterValues.Add(dx21OnlyParameter.Name, 0);
 
             var tx81ZAdditionalData = new TX81ZAdditionalVoiceData(parameterValues);
             var dx21Voice = new DX21Voice(dx21ParameterValues);

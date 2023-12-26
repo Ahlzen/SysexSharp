@@ -8,18 +8,8 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 /// </summary>
 public class DX7ParameterChange : Sysex
 {
-    internal static readonly byte?[] ParameterChangeFormat = {
-        0xf0, 0x43, 0x10, null, null, null, 0xf7
-    };
-
-    /// <summary>
-    /// Parameter change messages are always 7 bytes in length:
-    /// [0xf0, 0x43, 0x10, data, data, data, 0xf7]
-    /// </summary>
-    internal const int ParameterChangeLengthBytes = 7;
-
     public DX7ParameterChange(byte[] data) :
-        base(data, null, ParameterChangeLengthBytes)
+        base(data, null, DXData.DX7ParameterChangeLengthBytes)
     {}
 
     public override string? Device => "DX7";
@@ -38,11 +28,11 @@ public class DX7ParameterChange : Sysex
     public int Group => GetGroup(_data);
 
     /// <see cref="Sysex.Test"/>
-    public new static bool Test(byte[] data)
+    public static bool Test(byte[] data)
     {
         if (!Sysex.Test(data)) return false;
-        if (!ParsingUtils.MatchesPattern(data, ParameterChangeFormat)) return false;
-        if (data.Length != ParameterChangeLengthBytes) return false;
+        if (!ParsingUtils.MatchesPattern(data, DXData.DX7ParameterChangeFormat)) return false;
+        if (data.Length != DXData.DX7ParameterChangeLengthBytes) return false;
         int group = GetGroup(data);
         if (!(group == 0 || group == 2)) return false;
         return true;

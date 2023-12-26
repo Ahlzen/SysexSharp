@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
+﻿namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 
 internal static class YamahaFactory
 {
@@ -35,6 +32,8 @@ internal static class YamahaFactory
         // DX21
         if (DX21Voice.Test(data))
             return new DX21Voice(data);
+        if (DX21Bank.Test(data))
+            return new DX21Bank(data);
 
         // TX81Z
         if (TX81ZVoiceBank.Test(data))

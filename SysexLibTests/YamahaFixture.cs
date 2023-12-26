@@ -43,10 +43,12 @@ public class YamahaFixture : BaseFixture
 
     ///// DX21/DX27/DX100
 
+    private const string DX21BankFilename = "Yamaha DX21 Presets 1.syx";
+
     [Test]
     public void TestParseDX21Bank()
     {
-        Sysex sysex = LoadFile("Yamaha DX21 Presets 1.syx");
+        Sysex sysex = LoadFile(DX21BankFilename);
 
         Assert.AreEqual("Yamaha", sysex.ManufacturerName);
         Assert.AreEqual("DX21/DX27/DX100", sysex.Device);
@@ -76,10 +78,13 @@ public class YamahaFixture : BaseFixture
 
     ///// TX81Z
 
+    private const string TX81ZVoiceFilename = "Yamaha TX81Z FilterBass.syx";
+    private const string TX81ZBankFilename = "Yamaha TX81Z 01A.syx";
+
     [Test]
     public void TestParseTX81ZVoice()
     {
-        Sysex sysex = LoadFile("Yamaha TX81Z FilterBass.syx");
+        Sysex sysex = LoadFile(TX81ZVoiceFilename);
 
         // TX81Z voice consists of DX21 Voice Data + TX81Z Additional Voice Data
         Assert.IsTrue(sysex is CompositeSysex);
@@ -95,7 +100,7 @@ public class YamahaFixture : BaseFixture
     [Test]
     public void TestParseTX81ZBank()
     {
-        Sysex sysex = LoadFile("Yamaha TX81Z 01A.syx");
+        Sysex sysex = LoadFile(TX81ZBankFilename);
         Assert.AreEqual("Yamaha", sysex.ManufacturerName);
         Assert.AreEqual("TX81Z", sysex.Device);
         Assert.IsInstanceOf<TX81ZVoiceBank>(sysex);
@@ -110,5 +115,19 @@ public class YamahaFixture : BaseFixture
         Assert.AreEqual("TX81Z", voice!.Device);
         Assert.AreEqual("Single voice", voice!.Type);
         Assert.AreEqual("<<Bass.1>>", voice!.Name);
+    }
+
+
+    ///// List sysex details (for debugging)
+    
+    [Test]
+    [Explicit]
+    [TestCase(DX21BankFilename)]
+    [TestCase(TX81ZBankFilename)]
+    [TestCase(TX81ZVoiceFilename)]
+    public void ListDetails(string filename)
+    {
+        Sysex sysex = LoadFile(filename);
+        Console.WriteLine(FormatDetails(sysex));
     }
 }

@@ -74,4 +74,16 @@ public static class ParsingUtils
             if (data[i + offset] != pattern[i]) return false;
         return true;
     }
+
+    /// <summary>
+    /// Returns true if all count bytes, starting at offset, are zero.
+    /// Returns false otherwise, or if there is not enough bytes in data.
+    /// </summary>
+    public static bool AreZero(byte[] data, int offset, int count)
+    {
+        if (data.Length < offset + count) return false;
+        for (int i = 0 ; i< count; i++)
+            if (data[i + offset] != 0) return false;
+        return true;
+    }
 }

@@ -6,7 +6,7 @@ namespace Ahlzen.SysexSharp.SysexLib;
 /// Indicates that the type of Sysex can be parsed
 /// into known individual parameter values.
 /// </summary>
-internal interface ICanParse
+public interface ICanParse
 {
     /// <summary>
     /// Returns a list of parameter names for this sysex.
