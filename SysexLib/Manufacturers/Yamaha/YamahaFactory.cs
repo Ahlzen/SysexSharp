@@ -33,11 +33,11 @@ internal static class YamahaFactory
         if (DX21Voice.Test(data))
             return new DX21Voice(data);
         if (DX21Bank.Test(data))
-            return new DX21Bank(data);
+            return new DX21Bank(data, filename);
 
         // TX81Z
         if (TX81ZVoiceBank.Test(data))
-            return new TX81ZVoiceBank(data);
+            return new TX81ZVoiceBank(data, filename);
         if (TX81ZAdditionalVoiceData.Test(data))
             return new TX81ZAdditionalVoiceData(data);
 

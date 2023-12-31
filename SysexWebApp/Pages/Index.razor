@@ -9,16 +9,20 @@
         @foreach (Sysex sysex in _sysexes)
         {
             <li class="sysexItem">
-                <div class="title">@sysex.Name ?? "unknown"</div>
+                <div class="title">@(sysex.Name ?? "unknown")</div>
                 <div class="details">
-                    <div class="length">@sysex.Length bytes</div>
+                    <span class="length">@sysex.Length bytes</span>
                     @if (sysex.ManufacturerName != null)
                     {
-                        <div class="manufacturer">@sysex.ManufacturerName</div>
+                        <span class="manufacturer">@sysex.ManufacturerName</span>
+                    }
+                    @if (sysex.Device != null)
+                    {
+                        <span class="device">@sysex.Device</span>
                     }
                     @if (sysex.Type != null)
                     {
-                        <div class="type">@sysex.Type</div>
+                        <span class="type">@sysex.Type</span>
                     }
                 </div>
             </li>
@@ -28,10 +32,9 @@
     <h3>Add files here:</h3>
     <InputFile OnChange="@LoadFiles" />
     
-    
 </fieldset>
 
 <fieldset class="layoutbox">
     <h3>Log</h3>
-    <p>@_log</p>
+    <p style="white-space: pre-line;">@_log</p>
 </fieldset>
