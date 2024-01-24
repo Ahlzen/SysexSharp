@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "SysexCLI (--help)": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
+    },
+    "SysexCLI (info)": {
+      "commandName": "Project",
+      "commandLineArgs": "info \"../../../../SysexLibTests/data/Yamaha DX7 ROM1A.syx\""
+    },
+    "SysexCLI (extract)": {
+      "commandName": "Project",
+      "commandLineArgs": "extract \"../../../../SysexLibTests/data/Yamaha DX7 ROM1A.syx\""
+    }
+  }
+}
