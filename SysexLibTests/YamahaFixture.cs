@@ -87,10 +87,10 @@ public class YamahaFixture : BaseFixture
         Sysex sysex = LoadFile(TX81ZVoiceFilename);
 
         // TX81Z voice consists of DX21 Voice Data + TX81Z Additional Voice Data
-        Assert.IsTrue(sysex is CompositeSysex);
+        Assert.IsTrue(sysex is MultiPartSysex);
         Assert.IsTrue(sysex is TX81ZVoice);
-        Assert.IsTrue(((TX81ZVoice)sysex).GetItem(0) is TX81ZAdditionalVoiceData);
-        Assert.IsTrue(((TX81ZVoice)sysex).GetItem(1) is DX21Voice);
+        Assert.IsTrue(((TX81ZVoice)sysex).GetSysex(0) is TX81ZAdditionalVoiceData);
+        Assert.IsTrue(((TX81ZVoice)sysex).GetSysex(1) is DX21Voice);
         Assert.AreEqual("Yamaha", sysex!.ManufacturerName);
         Assert.AreEqual("TX81Z", sysex!.Device);
         Assert.AreEqual("Single voice", sysex!.Type);

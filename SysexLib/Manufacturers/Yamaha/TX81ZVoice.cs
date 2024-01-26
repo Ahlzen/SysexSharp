@@ -7,17 +7,17 @@ using Ahlzen.SysexSharp.SysexLib.Utils;
 
 namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 {
-    public class TX81ZVoice : CompositeSysex, ICanParse
+    public class TX81ZVoice : MultiPartSysex, ICanParse
     {
         public TX81ZVoice(byte[] data) : base(data)
         {
             if (ItemCount != 2)
                 throw new ArgumentException(
                     "Data is not a TX81ZVoice: Should contain two sysex messages (DX21Voice + TX81Z Additional data).");
-            if (GetItem(0) is not TX81ZAdditionalVoiceData)
+            if (GetSysex(0) is not TX81ZAdditionalVoiceData)
                 throw new ArgumentException(
                     "Data is not a TX81ZVoice: Second contained sysex should be TX81ZAdditionalData.");
-            if (GetItem(1) is not DX21Voice)
+            if (GetSysex(1) is not DX21Voice)
                 throw new ArgumentException("Data is not a TX81ZVoice: First contained sysex should be DX21Voice.");
         }
 
@@ -27,9 +27,9 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 
         public override string? Device => "TX81Z";
         public override string? Type => "Single voice";
-        public override string? Name => GetItem(1).Name;
+        public override string? Name => GetSysex(1).Name;
 
-        private const int DX21VoiceOffset = DXData.TX81ZAdditionalVoiceDataTotalLength;
+        private const int DX21VoiceOffset = DX_TX_Data.TX81ZAdditionalVoiceDataTotalLength;
         private const int TX81ZAdditionalDataOffset = 0;
 
         public new static bool Test(byte[] data)
@@ -43,16 +43,16 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
 
             // 1st sysex: TX81Z Additional Voice Data
             if (!ParsingUtils.MatchesPattern(data,
-               DXData.TX81ZAdditionalVoiceDataHeader, offsets[0])) return false;
+               DX_TX_Data.TX81ZAdditionalVoiceDataHeader, offsets[0])) return false;
 
             // 2nd sysex: DX21 Single Voice Data
             if (!ParsingUtils.MatchesPattern(data,
-               DXData.DX21SingleVoiceHeader, offsets[1])) return false;
+               DX_TX_Data.DX21SingleVoiceHeader, offsets[1])) return false;
 
-            var compositeSysex = new CompositeSysex(data);
-            if (compositeSysex.ItemCount != 2) return false;
-            if (compositeSysex.GetItem(0) is not TX81ZAdditionalVoiceData) return false;
-            if (compositeSysex.GetItem(1) is not DX21Voice) return false;
+            var multiPartSysex = new MultiPartSysex(data);
+            if (multiPartSysex.ItemCount != 2) return false;
+            if (multiPartSysex.GetSysex(0) is not TX81ZAdditionalVoiceData) return false;
+            if (multiPartSysex.GetSysex(1) is not DX21Voice) return false;
 
             return true;
         }
@@ -62,7 +62,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         {
             // Add DX21-specific parameters (not used, but must be supplied)
             var dx21ParameterValues = new Dictionary<string, object>(parameterValues);
-            foreach (Parameter dx21OnlyParameter in DXData.DX21OnlyVoiceParameters)
+            foreach (Parameter dx21OnlyParameter in DX_TX_Data.DX21OnlyVoiceParameters)
                 dx21ParameterValues.Add(dx21OnlyParameter.Name, 0);
 
             var tx81ZAdditionalData = new TX81ZAdditionalVoiceData(parameterValues);
@@ -74,33 +74,33 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         #region ICanParse
 
         public IEnumerable<string> ParameterNames =>
-            DXData.DX21SingleVoiceParametersByName.Keys
-            .Union(DXData.TX81ZAdditionalVoiceDataParametersByName.Keys);
+            DX_TX_Data.DX21SingleVoiceParametersByName.Keys
+            .Union(DX_TX_Data.TX81ZAdditionalVoiceDataParametersByName.Keys);
 
         public object GetParameterValue(string parameterName)
         {
-            if (DXData.DX21SingleVoiceParametersByName.ContainsKey(parameterName))
-                return DXData.DX21SingleVoiceParametersByName[parameterName].GetValue(
+            if (DX_TX_Data.DX21SingleVoiceParametersByName.ContainsKey(parameterName))
+                return DX_TX_Data.DX21SingleVoiceParametersByName[parameterName].GetValue(
                     _data, DX21VoiceOffset);
-            if (DXData.TX81ZAdditionalVoiceDataParametersByName.ContainsKey(parameterName))
-                return DXData.TX81ZAdditionalVoiceDataParametersByName[parameterName].GetValue(
+            if (DX_TX_Data.TX81ZAdditionalVoiceDataParametersByName.ContainsKey(parameterName))
+                return DX_TX_Data.TX81ZAdditionalVoiceDataParametersByName[parameterName].GetValue(
                     _data, TX81ZAdditionalDataOffset);
             throw new ArgumentException($"Parameter \"{parameterName}\" not found", nameof(parameterName));
         }
 
         public void Validate()
         {
-            DXData.DX21SingleVoiceParameters.ForEach(
+            DX_TX_Data.DX21SingleVoiceParameters.ForEach(
                 p => p.Validate(_data, DX21VoiceOffset));
-            DXData.TX81ZAdditionalVoiceDataParameters.ForEach(
+            DX_TX_Data.TX81ZAdditionalVoiceDataParameters.ForEach(
                 p => p.Validate(_data, TX81ZAdditionalDataOffset));
         }
 
         public Dictionary<string, object> ToDictionary()
         {
-            Dictionary<string, object> dict = DXData.DX21SingleVoiceParameters.ToDictionary(
+            Dictionary<string, object> dict = DX_TX_Data.DX21SingleVoiceParameters.ToDictionary(
                 p => p.Name, p => p.GetValue(_data, DX21VoiceOffset));
-            DXData.TX81ZAdditionalVoiceDataParameters.ForEach(p =>
+            DX_TX_Data.TX81ZAdditionalVoiceDataParameters.ForEach(p =>
                 dict.Add(p.Name, p.GetValue(_data, TX81ZAdditionalDataOffset)));
             return dict;
         }

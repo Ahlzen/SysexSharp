@@ -6,19 +6,19 @@ internal static class YamahaFactory
     {
         // Check known composite (multi) sysex types
         
-        if (CompositeSysex.GetSysexCount(data) > 1)
+        if (MultiPartSysex.GetSysexCount(data) > 1)
         {
-            var compositeSysex = new CompositeSysex(data);
+            var multiPartSysex = new MultiPartSysex(data);
 
             // TX81Z Voice = TX81Z Additional Voice Data + DX21 Voice
-            if (compositeSysex.ItemCount == 2 &&
-                compositeSysex.GetItem(0) is TX81ZAdditionalVoiceData &&
-                compositeSysex.GetItem(1) is DX21Voice)
+            if (multiPartSysex.ItemCount == 2 &&
+                multiPartSysex.GetSysex(0) is TX81ZAdditionalVoiceData &&
+                multiPartSysex.GetSysex(1) is DX21Voice)
             {
                 return new TX81ZVoice(data);
             }
 
-            return new CompositeSysex(data);
+            return new MultiPartSysex(data);
         }
 
         // DX7

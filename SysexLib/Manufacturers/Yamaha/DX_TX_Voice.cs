@@ -12,7 +12,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 /// (or single-voice related parseable sysex; in which case Name may
 /// be null)
 /// </summary>
-public abstract class DXVoice : Sysex, ICanParse
+public abstract class DX_TX_Voice : Sysex, ICanParse
 {
     internal abstract byte?[] Header { get; }
     internal virtual int HeaderLength => Header.Length;
@@ -26,7 +26,7 @@ public abstract class DXVoice : Sysex, ICanParse
     /// <summary>
     /// Constructor from existing data.
     /// </summary>
-    internal DXVoice(byte[] data) : base(data)
+    internal DX_TX_Voice(byte[] data) : base(data)
     {
         if (data.Length != TotalLength)
         {

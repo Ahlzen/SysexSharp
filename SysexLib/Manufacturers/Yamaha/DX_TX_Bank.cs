@@ -10,7 +10,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 /// Base class for DX/TX-series multi-item bank data dumps,
 /// such as a DX7 32-voice bank.
 /// </summary>
-public abstract class DXBank : Sysex, IHasItems
+public abstract class DX_TX_Bank : Sysex, IHasItems
 {
     protected abstract byte?[] Header { get; }
     protected virtual int HeaderLength => Header.Length;
@@ -33,7 +33,7 @@ public abstract class DXBank : Sysex, IHasItems
     protected abstract string? ItemNameParameter { get; } // name of the parameter that parses the item name, e.g. "Voice name", if applicable
 
 
-    internal DXBank(byte[] data, string? name) : base(data, name)
+    internal DX_TX_Bank(byte[] data, string? name) : base(data, name)
     {
         if (data.Length != TotalLength)
         {

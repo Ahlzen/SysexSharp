@@ -9,7 +9,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha;
 public class DX7ParameterChange : Sysex
 {
     public DX7ParameterChange(byte[] data) :
-        base(data, null, DXData.DX7ParameterChangeLengthBytes)
+        base(data, null, DX_TX_Data.DX7ParameterChangeLengthBytes)
     {}
 
     public override string? Device => "DX7";
@@ -31,8 +31,8 @@ public class DX7ParameterChange : Sysex
     public static bool Test(byte[] data)
     {
         if (!Sysex.Test(data)) return false;
-        if (!ParsingUtils.MatchesPattern(data, DXData.DX7ParameterChangeFormat)) return false;
-        if (data.Length != DXData.DX7ParameterChangeLengthBytes) return false;
+        if (!ParsingUtils.MatchesPattern(data, DX_TX_Data.DX7ParameterChangeFormat)) return false;
+        if (data.Length != DX_TX_Data.DX7ParameterChangeLengthBytes) return false;
         int group = GetGroup(data);
         if (!(group == 0 || group == 2)) return false;
         return true;

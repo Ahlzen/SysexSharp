@@ -12,7 +12,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
     /// Many of these devices share parameters, hence the need
     /// for this class to avoid duplicated data.
     /// </remarks>
-    internal static class DXData
+    internal static class DX_TX_Data
     {
         // DX7 parameter change
 
@@ -128,7 +128,7 @@ namespace Ahlzen.SysexSharp.SysexLib.Manufacturers.Yamaha
         internal static readonly byte[] TX81ZUnusedGlobalPitchEGData = {0x63, 0x63, 0x63, 0x32, 0x32, 0x32};
 
 
-        static DXData()
+        static DX_TX_Data()
         {
             #region DX7 Single Voice Parameters
 
