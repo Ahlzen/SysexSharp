@@ -52,5 +52,10 @@ namespace SysexWebApp.Pages
             StateHasChanged();
         }
 
+        // https://codeblog.jonskeet.uk/2020/07/12/v-drum-explorer-blazor-and-the-web-midi-api/
+        private async Task InitializeMidi()
+        {
+
+        }
     }
 }
